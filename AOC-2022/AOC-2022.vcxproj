@@ -140,7 +140,31 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Private\AOC-2022-Application.cpp" />
-    <ClCompile Include="Source\Private\Puzzles.cpp" />
+    <ClCompile Include="Source\Private\Puzzle01.cpp" />
+    <ClCompile Include="Source\Private\Puzzle02.cpp" />
+    <ClCompile Include="Source\Private\Puzzle03.cpp" />
+    <ClCompile Include="Source\Private\Puzzle04.cpp" />
+    <ClCompile Include="Source\Private\Puzzle05.cpp" />
+    <ClCompile Include="Source\Private\Puzzle06.cpp" />
+    <ClCompile Include="Source\Private\Puzzle07.cpp" />
+    <ClCompile Include="Source\Private\Puzzle08.cpp" />
+    <ClCompile Include="Source\Private\Puzzle09.cpp" />
+    <ClCompile Include="Source\Private\Puzzle10.cpp" />
+    <ClCompile Include="Source\Private\Puzzle11.cpp" />
+    <ClCompile Include="Source\Private\Puzzle12.cpp" />
+    <ClCompile Include="Source\Private\Puzzle13.cpp" />
+    <ClCompile Include="Source\Private\Puzzle14.cpp" />
+    <ClCompile Include="Source\Private\Puzzle15.cpp" />
+    <ClCompile Include="Source\Private\Puzzle16.cpp" />
+    <ClCompile Include="Source\Private\Puzzle17.cpp" />
+    <ClCompile Include="Source\Private\Puzzle18.cpp" />
+    <ClCompile Include="Source\Private\Puzzle19.cpp" />
+    <ClCompile Include="Source\Private\Puzzle20.cpp" />
+    <ClCompile Include="Source\Private\Puzzle21.cpp" />
+    <ClCompile Include="Source\Private\Puzzle22.cpp" />
+    <ClCompile Include="Source\Private\Puzzle23.cpp" />
+    <ClCompile Include="Source\Private\Puzzle24.cpp" />
+    <ClCompile Include="Source\Private\Puzzle25.cpp" />
     <ClCompile Include="Source\pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

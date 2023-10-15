@@ -4,12 +4,12 @@
 
 namespace Core
 {
-	class CORE_API Puzzle
+	class Puzzle
 	{
 	public:
-		Puzzle(const std::filesystem::path& inputFile);
+		CORE_API Puzzle(const std::filesystem::path& inputFile);
 
-		void Solve() const;
+		void CORE_API Solve() const;
 
 	protected:
 		virtual void SolveA(const std::vector<std::string>& input) const = 0;
@@ -23,7 +23,7 @@ namespace Core
 #define STRING(input) #input
 
 #define DECLARE_PUZZLE(number) \
-	class Puzzle##number : public Core::Puzzle \
+	class Puzzle##number final : public Core::Puzzle \
 	{ \
 	public: \
 		Puzzle##number() \
@@ -33,7 +33,3 @@ namespace Core
 		virtual void SolveA(const std::vector<std::string>& input) const override; \
 		virtual void SolveB(const std::vector<std::string>& input) const override; \
 	}; \
-
-#define DEFINE_EMPTY_PUZZLE(number) \
-	void Puzzle##number::SolveA(const std::vector<std::string>& input) const { } \
-	void Puzzle##number::SolveB(const std::vector<std::string>& input) const { } \

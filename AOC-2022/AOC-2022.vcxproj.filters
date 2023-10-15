@@ -21,7 +21,79 @@
     <ClCompile Include="Source\Private\AOC-2022-Application.cpp">
       <Filter>Private</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Private\Puzzles.cpp">
+    <ClCompile Include="Source\Private\Puzzle01.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle02.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle03.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle04.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle05.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle06.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle07.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle08.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle09.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle10.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle11.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle12.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle13.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle14.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle15.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle16.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle17.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle18.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle19.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle20.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle21.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle22.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle23.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle24.cpp">
+      <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle25.cpp">
       <Filter>Private</Filter>
     </ClCompile>
     <ClCompile Include="Source\pch.cpp" />

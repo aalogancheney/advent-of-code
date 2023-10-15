@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Input.h"
+#include "Assertions.h"
+#include <assert.h>
 
 namespace Core
 {
