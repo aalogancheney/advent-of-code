@@ -7,6 +7,9 @@
     <Filter Include="Public">
       <UniqueIdentifier>{8480F8CA-7022-23A1-59DD-36F5451EAAF1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Public\Math">
+      <UniqueIdentifier>{DDD7AF31-498D-2827-D281-22FE3E361F2B}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\Application.h">
@@ -26,6 +29,9 @@
     </ClInclude>
     <ClInclude Include="Source\Public\Input.h">
       <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\Math\Range.h">
+      <Filter>Public\Math</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\Puzzle.h">
       <Filter>Public</Filter>
