@@ -20,9 +20,7 @@ namespace Core
 			bool IsContainedBy(const Range& other)
 			{
 				return lowerBound >= other.lowerBound
-					&& lowerBound <= other.upperBound
-					&& upperBound <= other.upperBound
-					&& upperBound >= other.lowerBound;
+					&& upperBound <= other.upperBound;
 			}
 
 			bool Overlaps(const Range& other)
