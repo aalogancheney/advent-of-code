@@ -28,14 +28,18 @@ namespace Puzzle01Helpers
 
 void Puzzle01::SolveA(const std::vector<std::string>& input) const
 {
-	auto caloriesPerElf{ Puzzle01Helpers::GetTotalCaloriesPerElf(input) };
+	using namespace Puzzle01Helpers;
+
+	auto caloriesPerElf{ GetTotalCaloriesPerElf(input) };
 	check(caloriesPerElf.size() >= 1)
 	std::cout << caloriesPerElf.front() << std::endl;
 }
 
 void Puzzle01::SolveB(const std::vector<std::string>& input) const
 {
-	auto caloriesPerElf{ Puzzle01Helpers::GetTotalCaloriesPerElf(input) };
+	using namespace Puzzle01Helpers;
+	
+	auto caloriesPerElf{ GetTotalCaloriesPerElf(input) };
 	check(caloriesPerElf.size() >= 3);
 	const int32 topThreeElfCalories{ caloriesPerElf[0] + caloriesPerElf[1] + caloriesPerElf[2] };
 	std::cout << topThreeElfCalories << std::endl;
