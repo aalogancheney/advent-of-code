@@ -7,7 +7,8 @@
 #define check(condition) \
 	{ \
 		assert((condition)); \
-		if (!(condition)) { \
+		if (!(condition)) \
+		{ \
 			std::terminate(); \
 		} \
 	}

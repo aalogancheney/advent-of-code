@@ -26,6 +26,7 @@ namespace Puzzle02Helpers
 
 	EMove TranslateMyMoveB(EMove opponentMove, char input)
 	{
+		check(input == 'X' || input == 'Y' || input == 'Z');
 		static constexpr EOutcome outcomes[] { EOutcome::Lost, EOutcome::Draw, EOutcome::Win };
 		EOutcome desiredOutcome{ outcomes[static_cast<int32>(input - 'X')] };
 
