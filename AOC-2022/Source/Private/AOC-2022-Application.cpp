@@ -10,6 +10,6 @@ Core::Application* Core::CreateApplication()
 
 void AOC2022Application::Run()
 {
-	auto puzzle{ Puzzle04{} };
+	auto puzzle{ Puzzle05{} };
 	puzzle.Solve();
 }
