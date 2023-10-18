@@ -17,4 +17,19 @@ namespace Core
 		}
 		return lines;
 	}
+
+	std::vector<std::string> SplitString(const std::string& input, const std::string& delimiter)
+	{
+		std::vector<std::string> splitString{ };
+
+		size_t last{ 0 };
+		size_t next{ 0 };
+		while ((next = input.find(delimiter, last)) != std::string::npos)
+		{
+			splitString.emplace_back(input.substr(last, next - last));
+			last = next + 1;
+		}
+		splitString.emplace_back(input.substr(last));
+		return splitString;
+	}
 }

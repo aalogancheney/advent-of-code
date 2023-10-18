@@ -6,31 +6,16 @@ using Range = Core::Math::Range<int32>;
 
 namespace Puzzle04Helpers
 {
-	std::vector<std::string> SplitString(const std::string& input, const std::string& delimiter)
-	{
-		std::vector<std::string> splitString{ };
-
-		size_t last{ 0 };
-		size_t next{ 0 };
-		while ((next = input.find(delimiter, last)) != std::string::npos)
-		{
-			splitString.emplace_back(input.substr(last, next - last));
-			last = next + 1;
-		}
-		splitString.emplace_back(input.substr(last));
-		return splitString;
-	}
-
 	std::vector<std::string> GetStringRanges(const std::string& stringRanges)
 	{
 		static const std::string delimiter{ "," };
-		return SplitString(stringRanges, delimiter);
+		return Core::SplitString(stringRanges, delimiter);
 	}
 
 	Range ConstructRange(const std::string& stringRange)
 	{
 		static const std::string delimiter{ "-" };
-		std::vector<std::string> rangeNumbers{ SplitString(stringRange, delimiter) };
+		std::vector<std::string> rangeNumbers{ Core::SplitString(stringRange, delimiter) };
 		check(rangeNumbers.size() == 2);
 		return Range{ std::stoi(rangeNumbers[0]), std::stoi(rangeNumbers[1]) };
 	}
