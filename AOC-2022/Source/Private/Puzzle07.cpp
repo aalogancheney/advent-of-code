@@ -28,6 +28,23 @@ namespace Puzzle07Helpers
         std::unordered_map<std::string, uint64> files{ };
     };
 
+    uint64 RecursivelyCalculateDirectorySizes(Directory& root)
+    {
+        root.size = 0;
+
+        for (auto& subDirectories : root.directories)
+        {
+            root.size += RecursivelyCalculateDirectorySizes(subDirectories.second);
+        }
+
+        for (const auto& file : root.files)
+        {
+            root.size += file.second;
+        }
+
+        return root.size;
+    }
+
     class FileSystem
     {
     public:
@@ -116,42 +133,8 @@ namespace Puzzle07Helpers
                 }
             }
         }
-    }
 
-    void GetDirectorySizes(const Directory& root, const std::string& parentPath, std::unordered_map<std::string, uint64>& directorySizes)
-    {
-        const std::string myPath{ parentPath + root.name };
-
-        // Start with size 0.
-        directorySizes.emplace(myPath, 0);
-        
-        // Add the size of each file contained in this directory.
-        for (const auto& iter : root.files)
-        {
-            directorySizes[myPath] += iter.second;
-        }
-
-        // Recursively search subdirectories and add their values.
-        for (const auto& iter : root.directories)
-        {
-            GetDirectorySizes(iter.second, myPath + iter.first + "/", directorySizes);
-            directorySizes[myPath] += directorySizes[iter.first];
-        }
-    }
-
-    uint64 GetDirectorySizes2(Directory& root)
-    {
-        for (auto& subDirectories : root.directories)
-        {
-            root.size += GetDirectorySizes2(subDirectories.second);
-        }
-
-        for (const auto& file : root.files)
-        {
-            root.size += file.second;
-        }
-
-        return root.size;
+        fileSystem.GetTopDirectory().size = RecursivelyCalculateDirectorySizes(fileSystem.GetTopDirectory());
     }
 
     uint64 GetTotalSizeOfDirectoriesLessThan(const Directory& root, const uint64 lessThan)
@@ -201,10 +184,8 @@ void Puzzle07::SolveA(const std::vector<std::string>& input) const
 	FileSystem fileSystem{ };
     PopulateFileSystem(fileSystem, input);
 
-    uint64 totalSize{ GetDirectorySizes2(fileSystem.GetTopDirectory()) };
     uint64 totalSizeMatching{ GetTotalSizeOfDirectoriesLessThan(fileSystem.GetTopDirectory(), 100001) };
     std::cout << totalSizeMatching << std::endl;
-    //PrintDirectoryStructure(fileSystem.GetTopDirectory(), "", "/");
 }
 
 void Puzzle07::SolveB(const std::vector<std::string>& input) const
@@ -214,8 +195,7 @@ void Puzzle07::SolveB(const std::vector<std::string>& input) const
     FileSystem fileSystem{ };
     PopulateFileSystem(fileSystem, input);
 
-    uint64 totalSize{ GetDirectorySizes2(fileSystem.GetTopDirectory()) };
-    uint64 requiredSpace{ 30000000 - (70000000 - totalSize) };
+    const uint64 requiredSpace{ 30000000 - (70000000 - fileSystem.GetTopDirectory().size) };
     std::vector<uint64> candidates{ };
     GetSmallestDirectorySizeGreaterThanOrEqualTo(fileSystem.GetTopDirectory(), requiredSpace, candidates);
     std::sort(candidates.begin(), candidates.end());
