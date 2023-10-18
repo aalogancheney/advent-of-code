@@ -153,6 +153,7 @@
     <ClInclude Include="Source\Public\EntryPoint.h" />
     <ClInclude Include="Source\Public\Input.h" />
     <ClInclude Include="Source\Public\Math\Range.h" />
+    <ClInclude Include="Source\Public\Math\Tree.h" />
     <ClInclude Include="Source\Public\Puzzle.h" />
     <ClInclude Include="Source\Public\ScopedTimer.h" />
     <ClInclude Include="Source\Public\Types.h" />
