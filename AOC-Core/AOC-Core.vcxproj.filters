@@ -30,6 +30,9 @@
     <ClInclude Include="Source\Public\Input.h">
       <Filter>Public</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Public\Math\Grid2d.h">
+      <Filter>Public\Math</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Public\Math\Range.h">
       <Filter>Public\Math</Filter>
     </ClInclude>

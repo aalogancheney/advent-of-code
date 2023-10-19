@@ -9,6 +9,10 @@ namespace Core
 		template<typename TData>
 		class Tree
 		{
+		public:
+			void MapDFS();
+			void MapBFS();
+
 		private:
 			struct InternalNode
 			{
