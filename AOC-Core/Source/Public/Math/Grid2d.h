@@ -21,16 +21,18 @@ namespace Core
 			size_t GetWidth() const { return width; }
 			size_t GetHeight() const { return height; }
 
-			T& at(size_t x, size_t y)
+			const T& at(size_t x, size_t y) const
 			{
 				check(x < GetWidth());
 				check(y < GetHeight());
 				return elements.at(y * GetHeight() + x);
 			}
 
-			const T& at(size_t x, size_t y) const
+			T& at(size_t x, size_t y)
 			{
-				return const_cast<Grid2d<T>*>(this)->at(x, y);
+				check(x < GetWidth());
+				check(y < GetHeight());
+				return elements.at(y * GetHeight() + x);
 			}
 
 			void Print() const
