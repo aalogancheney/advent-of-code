@@ -39,6 +39,9 @@
     <ClInclude Include="Source\Public\Math\Tree.h">
       <Filter>Public\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Public\Math\Vector2d.h">
+      <Filter>Public\Math</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Public\Puzzle.h">
       <Filter>Public</Filter>
     </ClInclude>

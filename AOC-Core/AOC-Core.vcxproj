@@ -155,6 +155,7 @@
     <ClInclude Include="Source\Public\Math\Grid2d.h" />
     <ClInclude Include="Source\Public\Math\Range.h" />
     <ClInclude Include="Source\Public\Math\Tree.h" />
+    <ClInclude Include="Source\Public\Math\Vector2d.h" />
     <ClInclude Include="Source\Public\Puzzle.h" />
     <ClInclude Include="Source\Public\ScopedTimer.h" />
     <ClInclude Include="Source\Public\Types.h" />
