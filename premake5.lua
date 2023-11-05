@@ -35,7 +35,7 @@ project "AOC-Core"
 
 	filter "system:windows"
 		cppdialect "C++20"
-		staticruntime "On"
+		staticruntime "off"
 		systemversion "latest"
 
 		defines
@@ -51,14 +51,17 @@ project "AOC-Core"
 	filter "configurations:Debug"
 		defines "AOC_DEBUG"
 		symbols "On"
+		runtime "Debug"
 
 	filter "configurations:Release"
 		defines "AOC_RELEASE"
 		optimize "On"
+		runtime "Release"
 
 	filter "configurations:Distribution"
 		defines "AOC_DISTRIBUTION"
 		optimize "On"
+		runtime "Release"
 
 project "AOC-2022"
 	location "AOC-2022"
@@ -91,7 +94,7 @@ project "AOC-2022"
 
 	filter "system:windows"
 		cppdialect "C++20"
-		staticruntime "On"
+		staticruntime "off"
 		systemversion "latest"
 
 		defines
@@ -102,11 +105,14 @@ project "AOC-2022"
 	filter "configurations:Debug"
 		defines "AOC_DEBUG"
 		symbols "On"
+		runtime "Debug"
 
 	filter "configurations:Release"
 		defines "AOC_RELEASE"
 		optimize "On"
+		runtime "Release"
 
 	filter "configurations:Distribution"
 		defines "AOC_DISTRIBUTION"
 		optimize "On"
+		runtime "Release"

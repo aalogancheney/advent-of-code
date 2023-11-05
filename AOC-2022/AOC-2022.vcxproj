@@ -83,7 +83,7 @@
       <AdditionalIncludeDirectories>..\AOC-Core\Source;..\AOC-Core\Source\Public;Source\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -103,7 +103,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -124,7 +124,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -135,6 +135,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\AOC-2022-Application.h" />
+    <ClInclude Include="Source\Public\Puzzle10\CPU.h" />
+    <ClInclude Include="Source\Public\Puzzle10\Instructions.h" />
+    <ClInclude Include="Source\Public\Puzzle10\Program.h" />
     <ClInclude Include="Source\Public\Puzzles.h" />
     <ClInclude Include="Source\pch.h" />
   </ItemGroup>
@@ -150,6 +153,9 @@
     <ClCompile Include="Source\Private\Puzzle08.cpp" />
     <ClCompile Include="Source\Private\Puzzle09.cpp" />
     <ClCompile Include="Source\Private\Puzzle10.cpp" />
+    <ClCompile Include="Source\Private\Puzzle10\CPU.cpp" />
+    <ClCompile Include="Source\Private\Puzzle10\Instructions.cpp" />
+    <ClCompile Include="Source\Private\Puzzle10\Program.cpp" />
     <ClCompile Include="Source\Private\Puzzle11.cpp" />
     <ClCompile Include="Source\Private\Puzzle12.cpp" />
     <ClCompile Include="Source\Private\Puzzle13.cpp" />

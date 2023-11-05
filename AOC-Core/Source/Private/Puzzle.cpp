@@ -15,11 +15,15 @@ namespace Core
 	void Puzzle::Solve() const
 	{
 		{
+			std::cout << "Starting Part A..." << std::endl;
 			const auto partATimer{ ScopedTimer("Part A") };
 			SolveA(input);
 		}
 		
+		std::cout << std::endl;
+
 		{
+			std::cout << "Starting Part B..." << std::endl;
 			const auto partATimer{ ScopedTimer("Part B") };
 			SolveB(input);
 		}

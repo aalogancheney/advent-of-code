@@ -4,13 +4,28 @@
     <Filter Include="Private">
       <UniqueIdentifier>{001F8D23-6CFE-0BBF-7516-9795E1747220}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Private\Puzzle10">
+      <UniqueIdentifier>{FAFFFA44-E6F8-1997-0F2B-FF1BFB82F9A2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Public">
       <UniqueIdentifier>{8480F8CA-7022-23A1-59DD-36F5451EAAF1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public\Puzzle10">
+      <UniqueIdentifier>{FE55368B-6AE1-A34F-73F2-2644DFFCFF4F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Public\AOC-2022-Application.h">
       <Filter>Public</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\Puzzle10\CPU.h">
+      <Filter>Public\Puzzle10</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\Puzzle10\Instructions.h">
+      <Filter>Public\Puzzle10</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Public\Puzzle10\Program.h">
+      <Filter>Public\Puzzle10</Filter>
     </ClInclude>
     <ClInclude Include="Source\Public\Puzzles.h">
       <Filter>Public</Filter>
@@ -50,6 +65,15 @@
     </ClCompile>
     <ClCompile Include="Source\Private\Puzzle10.cpp">
       <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle10\CPU.cpp">
+      <Filter>Private\Puzzle10</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle10\Instructions.cpp">
+      <Filter>Private\Puzzle10</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle10\Program.cpp">
+      <Filter>Private\Puzzle10</Filter>
     </ClCompile>
     <ClCompile Include="Source\Private\Puzzle11.cpp">
       <Filter>Private</Filter>
