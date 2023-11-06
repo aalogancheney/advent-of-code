@@ -33,7 +33,7 @@ namespace Puzzle10Helpers
 		}
 
 		const int32 crtPosition{ (cycles - 1) % crtWidth };
-		if (x == crtPosition || x - 1 == crtPosition || x + 1 == crtPosition)
+		if (std::abs(x - crtPosition) <= 1)
 		{
 			crtPixels.emplace_back('#');
 		}

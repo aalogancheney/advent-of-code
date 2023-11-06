@@ -153,6 +153,7 @@
     <ClInclude Include="Source\Public\EntryPoint.h" />
     <ClInclude Include="Source\Public\Input.h" />
     <ClInclude Include="Source\Public\Math\Grid2d.h" />
+    <ClInclude Include="Source\Public\Math\NavGrid2d.h" />
     <ClInclude Include="Source\Public\Math\Range.h" />
     <ClInclude Include="Source\Public\Math\Tree.h" />
     <ClInclude Include="Source\Public\Math\Vector2d.h" />

@@ -23,23 +23,23 @@ namespace Core::Math
 		{
 			check(x < GetWidth());
 			check(y < GetHeight());
-			return elements.at(y * GetHeight() + x);
+			return elements.at(y * GetWidth() + x);
 		}
 
 		T& at(size_t x, size_t y)
 		{
 			check(x < GetWidth());
 			check(y < GetHeight());
-			return elements.at(y * GetHeight() + x);
+			return elements.at(y * GetWidth() + x);
 		}
 
 		void Print() const
 		{
-			for (auto rowIndex{ 0 }; rowIndex < GetWidth(); ++rowIndex)
+			for (auto rowIndex{ 0 }; rowIndex < GetHeight(); ++rowIndex)
 			{
-				for (auto colIndex{ 0 }; colIndex < GetHeight(); ++colIndex)
+				for (auto colIndex{ 0 }; colIndex < GetWidth(); ++colIndex)
 				{
-					std::cout << at(rowIndex, colIndex);
+					std::cout << at(colIndex, rowIndex);
 				}
 				std::cout << std::endl;
 			}
