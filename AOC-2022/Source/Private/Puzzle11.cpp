@@ -117,7 +117,7 @@ namespace Puzzle11Helpers
 	{
 		std::vector<Monkey> monkeys{ InitializeMonkeys() };
 
-		for (int32 count{ 0 }; count < rounds; ++count)
+		for (uint32 count{ 0 }; count < rounds; ++count)
 		{
 			for (auto& monkey : monkeys)
 			{
