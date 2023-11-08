@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pch.h"
+
 #include "Types.h"
 
 namespace Core::Math

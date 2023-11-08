@@ -1,4 +1,5 @@
 #include "pch.h"
+
 #include "Puzzles.h"
 #include "Core.h"
 
@@ -15,11 +16,8 @@ namespace Puzzle12Helpers
 
 		}
 
-		size_t startX{ 0 };
-		size_t startY{ 0 };
-
-		size_t endX{ 0 };
-		size_t endY{ 0 };
+		Grid2dCoordinate start{ 0, 0 };
+		Grid2dCoordinate end{ 0, 0 };
 	};
 
 	using TopologicalNavGrid = Core::Math::NavGrid2d<GroundHeight>;
@@ -28,19 +26,6 @@ namespace Puzzle12Helpers
 	constexpr GroundHeight startEval{ 'a' };
 	constexpr GroundHeight end{ 'E' };
 	constexpr GroundHeight endEval{ 'z' };
-
-	TopologicalNavGrid::AdjacencyCriteria hillClimbingAdjacencyCriteria = [](const GroundHeight& nodeHeight, const GroundHeight& neighborHeight)
-	{
-		if (nodeHeight == start)
-		{
-			return neighborHeight == startEval;
-		}
-		if (nodeHeight == end)
-		{
-			return neighborHeight == endEval;
-		}
-		return neighborHeight - 1 <= nodeHeight;
-	};
 
 	TopologicalGrid CreateGrid(const std::vector<std::string>& input)
 	{
@@ -52,16 +37,18 @@ namespace Puzzle12Helpers
 			{
 				grid.at(x, y) = line[x];
 
+				// Cache the start/end points, but replace them with their corresponding
+				// values for pathfinding.
 				if (line[x] == start)
 				{
-					grid.startX = x;
-					grid.startY = y;
+					grid.start.x = x;
+					grid.start.y = y;
 					grid.at(x, y) = startEval;
 				}
 				else if (line[x] == end)
 				{
-					grid.endX = x;
-					grid.endY = y;
+					grid.end.x = x;
+					grid.end.y = y;
 					grid.at(x, y) = endEval;
 				}
 			}
@@ -75,10 +62,19 @@ void Puzzle12::SolveA(const std::vector<std::string>& input) const
 	using namespace Puzzle12Helpers;
 
 	TopologicalGrid grid{ CreateGrid(input) };
+
+	TopologicalNavGrid::AdjacencyCriteria hillClimbingAdjacencyCriteria = [](const GroundHeight& nodeHeight, const GroundHeight& neighborHeight)
+	{
+		// When climbing, neighbors can be at most 1 higher than our current position, or they can be as low as we want.
+		return neighborHeight - 1 <= nodeHeight;
+	};
 	TopologicalNavGrid navGrid{ grid, hillClimbingAdjacencyCriteria };
 
-	size_t pathLength{ navGrid.GetPathLength(grid.startX, grid.startY, grid.endX, grid.endY) };
-	std::cout << "Path length = " << pathLength << std::endl;
+	std::vector<Grid2dCoordinate> path;
+	check(navGrid.TryFindPath(path, grid.start, grid.end));
+
+	// Subtract 1 since the path contains the start and end points.
+	std::cout << "Path length = " << path.size() - 1 << std::endl;
 }
 
 void Puzzle12::SolveB(const std::vector<std::string>& input) const
@@ -86,34 +82,18 @@ void Puzzle12::SolveB(const std::vector<std::string>& input) const
 	using namespace Puzzle12Helpers;
 
 	TopologicalGrid grid{ CreateGrid(input) };
-	TopologicalNavGrid navGrid{ grid, hillClimbingAdjacencyCriteria };
 
-	// Definitely not optimal--should instead be able to search from the end point and go outward
-	// to find the nearest 'a'. Runtime as-is is ~5s.
-	std::vector<size_t> pathLengths{ };
-	for (size_t y{ 0 }; y < grid.GetHeight(); ++y)
+	TopologicalNavGrid::AdjacencyCriteria hillDescendingAdjacencyCriteria = [](const GroundHeight& nodeHeight, const GroundHeight& neighborHeight)
 	{
-		for (size_t x{ 0 }; x < grid.GetWidth(); ++x)
-		{
-			if (grid.at(x, y) == start || grid.at(x, y) == startEval)
-			{
-				size_t pathLength{ navGrid.GetPathLength(x, y, grid.endX, grid.endY) };
-				if (pathLength != 0)
-				{
-					pathLengths.emplace_back(pathLength);
-				}
-			}
-		}
-	}
+		// When descending, neighbors can be at most 1 lower than our current position. Since we're searching in reverse, this condition
+		// ensures that we only get to our current position from a valid neighbor.
+		return neighborHeight + 1 >= nodeHeight;
+	};
+	TopologicalNavGrid navGrid{ grid, hillDescendingAdjacencyCriteria };
 
-	size_t minimumPathLength{ pathLengths[0] };
-	for (size_t pathLength : pathLengths)
-	{
-		if (pathLength < minimumPathLength)
-		{
-			minimumPathLength = pathLength;
-		}
-	}
+	std::vector<Grid2dCoordinate> path;
+	check(navGrid.TryFindPath(path, grid.end, 'a'));
 
-	std::cout << "Path length = " << minimumPathLength << std::endl;
+	// Subtract 1 since the path contains the start and end points.
+	std::cout << "Path length = " << path.size() - 1 << std::endl;
 }
