@@ -5,27 +5,27 @@
 
 namespace Puzzle10Helpers
 {
-	class Program;
+    class Program;
 
-	class CPU
-	{
-	public:
-		void AdvanceCycles();
-		void ExecuteProgram(Program& program);
+    class CPU
+    {
+    public:
+        void AdvanceCycles();
+        void ExecuteProgram(Program& program);
 
-		int32 CalculateOutput() const;
-		void PrintCRTOutput() const;
+        int32 CalculateOutput() const;
+        void PrintCRTOutput() const;
 
-		int32 GetCycles() { return cycles; }
-		int32& GetX() { return x; }
+        int32 GetCycles() { return cycles; }
+        int32& GetX() { return x; }
 
-	private:
-		int32 x{ 1 };
-		int32 cycles{ 0 };
+    private:
+        int32 x{ 1 };
+        int32 cycles{ 0 };
 
-		std::vector<int32> savedRegisterValues{ };
-		std::vector<char> crtPixels{ };
+        std::vector<int32> savedRegisterValues{ };
+        std::vector<char> crtPixels{ };
 
-		const int32 crtWidth{ 40 };
-	};
+        const int32 crtWidth{ 40 };
+    };
 }

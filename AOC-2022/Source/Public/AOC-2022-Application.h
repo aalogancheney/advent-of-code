@@ -7,7 +7,7 @@
 class AOC2022Application : public Core::Application
 {
 public:
-	virtual void Run() override;
+    virtual void Run() override;
 };
 
 Core::Application* Core::CreateApplication();

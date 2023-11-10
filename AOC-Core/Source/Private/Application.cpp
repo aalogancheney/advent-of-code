@@ -3,13 +3,13 @@
 
 namespace Core
 {
-	Application* CreateApplication()
-	{
-		return new Application();
-	}
+    Application* CreateApplication()
+    {
+        return new Application();
+    }
 
-	void Application::Run()
-	{
-		while (true);
-	}
+    void Application::Run()
+    {
+        while (true);
+    }
 }

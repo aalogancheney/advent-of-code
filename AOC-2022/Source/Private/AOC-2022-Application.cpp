@@ -5,11 +5,11 @@
 
 Core::Application* Core::CreateApplication()
 {
-	return new AOC2022Application();
+    return new AOC2022Application();
 }
 
 void AOC2022Application::Run()
 {
-	auto puzzle{ Puzzle12{ } };
-	puzzle.Solve();
+    auto puzzle{ Puzzle12{ } };
+    puzzle.Solve();
 }

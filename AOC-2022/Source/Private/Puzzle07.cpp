@@ -181,7 +181,7 @@ void Puzzle07::SolveA(const std::vector<std::string>& input) const
 {
     using namespace Puzzle07Helpers;
 
-	FileSystem fileSystem{ };
+    FileSystem fileSystem{ };
     PopulateFileSystem(fileSystem, input);
 
     uint64 totalSizeMatching{ GetTotalSizeOfDirectoriesLessThan(fileSystem.GetTopDirectory(), 100001) };

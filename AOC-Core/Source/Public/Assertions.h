@@ -5,16 +5,16 @@
 #if AOC_DEBUG
 
 #define check(condition) \
-	{ \
-		assert((condition)); \
-		if (!(condition)) \
-		{ \
-			std::terminate(); \
-		} \
-	}
+    { \
+        assert((condition)); \
+        if (!(condition)) \
+        { \
+            std::terminate(); \
+        } \
+    }
 
 #define checkNoEntry() \
-	check(false); \
+    check(false); \
 
 #else
 

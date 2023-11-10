@@ -12,7 +12,7 @@ using int16 = signed short int;
 using int32 = signed int;
 using int64 = signed long long;
 
-static_assert(sizeof(uint8)	== 1);
+static_assert(sizeof(uint8)    == 1);
 static_assert(sizeof(uint16) == 2);
 static_assert(sizeof(uint32) == 4);
 static_assert(sizeof(uint64) == 8);

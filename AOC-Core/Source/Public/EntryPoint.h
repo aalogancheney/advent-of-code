@@ -7,7 +7,7 @@ extern Core::Application* Core::CreateApplication();
 
 int main(int argc, char** argv)
 {
-	auto Application{ Core::CreateApplication() };
-	Application->Run();
-	delete Application;
+    auto Application{ Core::CreateApplication() };
+    Application->Run();
+    delete Application;
 }

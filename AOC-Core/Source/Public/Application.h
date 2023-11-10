@@ -5,15 +5,15 @@
 
 namespace Core
 {
-	class CORE_API Application
-	{
-	public:
-		Application() = default;
-		virtual ~Application() = default;
+    class CORE_API Application
+    {
+    public:
+        Application() = default;
+        virtual ~Application() = default;
 
-	public:
-		virtual void Run();
-	};
+    public:
+        virtual void Run();
+    };
 
-	Application* CreateApplication();
+    Application* CreateApplication();
 }
