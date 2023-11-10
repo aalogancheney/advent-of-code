@@ -134,6 +134,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Private\Puzzle13\Item.h" />
+    <ClInclude Include="Source\Private\Puzzle13\ListItem.h" />
+    <ClInclude Include="Source\Private\Puzzle13\ValueItem.h" />
     <ClInclude Include="Source\Public\AOC-2022-Application.h" />
     <ClInclude Include="Source\Public\Puzzle10\CPU.h" />
     <ClInclude Include="Source\Public\Puzzle10\Instructions.h" />
@@ -159,6 +162,8 @@
     <ClCompile Include="Source\Private\Puzzle11.cpp" />
     <ClCompile Include="Source\Private\Puzzle12.cpp" />
     <ClCompile Include="Source\Private\Puzzle13.cpp" />
+    <ClCompile Include="Source\Private\Puzzle13\ListItem.cpp" />
+    <ClCompile Include="Source\Private\Puzzle13\ValueItem.cpp" />
     <ClCompile Include="Source\Private\Puzzle14.cpp" />
     <ClCompile Include="Source\Private\Puzzle15.cpp" />
     <ClCompile Include="Source\Private\Puzzle16.cpp" />

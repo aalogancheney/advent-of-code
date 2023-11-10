@@ -7,6 +7,9 @@
     <Filter Include="Private\Puzzle10">
       <UniqueIdentifier>{FAFFFA44-E6F8-1997-0F2B-FF1BFB82F9A2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Private\Puzzle13">
+      <UniqueIdentifier>{FDFFFA44-E9F8-1997-122B-FF1BFE82F9A2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Public">
       <UniqueIdentifier>{8480F8CA-7022-23A1-59DD-36F5451EAAF1}</UniqueIdentifier>
     </Filter>
@@ -15,6 +18,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Private\Puzzle13\Item.h">
+      <Filter>Private\Puzzle13</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Private\Puzzle13\ListItem.h">
+      <Filter>Private\Puzzle13</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Private\Puzzle13\ValueItem.h">
+      <Filter>Private\Puzzle13</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Public\AOC-2022-Application.h">
       <Filter>Public</Filter>
     </ClInclude>
@@ -83,6 +95,12 @@
     </ClCompile>
     <ClCompile Include="Source\Private\Puzzle13.cpp">
       <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle13\ListItem.cpp">
+      <Filter>Private\Puzzle13</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Puzzle13\ValueItem.cpp">
+      <Filter>Private\Puzzle13</Filter>
     </ClCompile>
     <ClCompile Include="Source\Private\Puzzle14.cpp">
       <Filter>Private</Filter>
