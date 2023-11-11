@@ -159,6 +159,7 @@
     <ClInclude Include="Source\Public\Math\Vector2d.h" />
     <ClInclude Include="Source\Public\Puzzle.h" />
     <ClInclude Include="Source\Public\ScopedTimer.h" />
+    <ClInclude Include="Source\Public\Sharable.h" />
     <ClInclude Include="Source\Public\Types.h" />
     <ClInclude Include="Source\pch.h" />
   </ItemGroup>

@@ -51,6 +51,9 @@
     <ClInclude Include="Source\Public\ScopedTimer.h">
       <Filter>Public</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Public\Sharable.h">
+      <Filter>Public</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Public\Types.h">
       <Filter>Public</Filter>
     </ClInclude>

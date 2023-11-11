@@ -2,14 +2,20 @@
 
 #include "pch.h"
 
+#include "Core.h"
+
 enum class EItemType
 {
     Value,
     List,
 };
 
-class Item
+DECL_SHARABLE(Item);
+
+class Item : public std::enable_shared_from_this<Item>
 {
+    IMPL_SHARABLE(Item);
+
 public:
     Item(const std::string& inRaw)
         : raw{ inRaw }
@@ -24,5 +30,3 @@ public:
 private:
     std::string raw{ "" };
 };
-
-using ItemPtr = std::shared_ptr<Item>;
