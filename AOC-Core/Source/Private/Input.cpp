@@ -27,7 +27,7 @@ namespace Core
         while ((next = input.find(delimiter, last)) != std::string::npos)
         {
             splitString.emplace_back(input.substr(last, next - last));
-            last = next + 1;
+            last = next + delimiter.size();
         }
         splitString.emplace_back(input.substr(last));
         return splitString;

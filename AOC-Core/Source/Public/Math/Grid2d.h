@@ -2,8 +2,12 @@
 
 #include "pch.h"
 
+#include "Vector2d.h"
+
 namespace Core::Math
 {
+    using Grid2dCoordinate = Vector2D<size_t>;
+
     template<typename T>
     class Grid2d
     {
@@ -31,6 +35,16 @@ namespace Core::Math
             check(x < GetWidth());
             check(y < GetHeight());
             return elements.at(y * GetWidth() + x);
+        }
+
+        const T& at(Grid2dCoordinate coordinate) const
+        {
+            return at(coordinate.x, coordinate.y);
+        }
+
+        T& at(Grid2dCoordinate coordinate)
+        {
+            return at(coordinate.x, coordinate.y);
         }
 
         void Print() const

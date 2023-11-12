@@ -148,7 +148,7 @@ namespace Core::Math
         this->operator/=(length);
         return *this;
     }
-
-    using IVector2D = Core::Math::Vector2D<int32>;
-    using FVector2D = Core::Math::Vector2D<float>;
 }
+
+using IVector2D = Core::Math::Vector2D<int32>;
+using FVector2D = Core::Math::Vector2D<float>;
