@@ -151,6 +151,7 @@
     <ClInclude Include="Source\Public\Core.h" />
     <ClInclude Include="Source\Public\CoreMacros.h" />
     <ClInclude Include="Source\Public\EntryPoint.h" />
+    <ClInclude Include="Source\Public\Hashing.h" />
     <ClInclude Include="Source\Public\Input.h" />
     <ClInclude Include="Source\Public\Math\Grid2d.h" />
     <ClInclude Include="Source\Public\Math\NavGrid2d.h" />

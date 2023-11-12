@@ -5,8 +5,6 @@
 #include "Grid2d.h"
 #include "Vector2d.h"
 
-using Grid2dCoordinate = Core::Math::Vector2D<size_t>;
-
 namespace Core::Math
 {
     // A simple 2D grid that can calculate paths. Two pathfinding options are available:

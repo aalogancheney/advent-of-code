@@ -4,10 +4,10 @@
 
 #include "Vector2d.h"
 
+DECL_VECTOR2D(Grid2dCoordinate, size_t);
+
 namespace Core::Math
 {
-    using Grid2dCoordinate = Vector2D<size_t>;
-
     template<typename T>
     class Grid2d
     {

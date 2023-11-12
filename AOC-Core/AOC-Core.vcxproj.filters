@@ -27,6 +27,9 @@
     <ClInclude Include="Source\Public\EntryPoint.h">
       <Filter>Public</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Public\Hashing.h">
+      <Filter>Public</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Public\Input.h">
       <Filter>Public</Filter>
     </ClInclude>
