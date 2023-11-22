@@ -30,7 +30,7 @@ namespace Core
 		{ \
 			size_t operator()(const T& value) const \
 			{ \
-				size_t result{ 0ull }; \
+				size_t result{ 0 }; \
 				Core::HashCombine(result, __VA_ARGS__); \
 				return result; \
 			} \
