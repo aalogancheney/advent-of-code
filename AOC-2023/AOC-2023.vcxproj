@@ -15,27 +15,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2EAC41D9-1A79-9CE4-4392-8A8C2FBED172}</ProjectGuid>
+    <ProjectGuid>{4C4537D9-3812-92E4-612B-808C4D57C772}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>AOC-Core</RootNamespace>
+    <RootNamespace>AOC-2023</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
@@ -55,54 +55,49 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug-windows-x86_64\AOC-Core\</OutDir>
-    <IntDir>..\obj\Debug-windows-x86_64\AOC-Core\</IntDir>
-    <TargetName>AOC-Core</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <OutDir>..\bin\Debug-windows-x86_64\AOC-2023\</OutDir>
+    <IntDir>..\obj\Debug-windows-x86_64\AOC-2023\</IntDir>
+    <TargetName>AOC-2023</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release-windows-x86_64\AOC-Core\</OutDir>
-    <IntDir>..\obj\Release-windows-x86_64\AOC-Core\</IntDir>
-    <TargetName>AOC-Core</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <OutDir>..\bin\Release-windows-x86_64\AOC-2023\</OutDir>
+    <IntDir>..\obj\Release-windows-x86_64\AOC-2023\</IntDir>
+    <TargetName>AOC-2023</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Distribution-windows-x86_64\AOC-Core\</OutDir>
-    <IntDir>..\obj\Distribution-windows-x86_64\AOC-Core\</IntDir>
-    <TargetName>AOC-Core</TargetName>
-    <TargetExt>.dll</TargetExt>
+    <OutDir>..\bin\Distribution-windows-x86_64\AOC-2023\</OutDir>
+    <IntDir>..\obj\Distribution-windows-x86_64\AOC-2023\</IntDir>
+    <TargetName>AOC-2023</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>AOC_CORE_BUILD_DLL;AOC_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Source\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>AOC_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\AOC-Core\Source;..\AOC-Core\Source\Public;Source\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ImportLibrary>..\bin\Debug-windows-x86_64\AOC-Core\AOC-Core.lib</ImportLibrary>
     </Link>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Debug-windows-x86_64\AOC-2022 &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Debug-windows-x86_64\AOC-2022 &gt; nul)
-IF EXIST ..\bin\Debug-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Debug-windows-x86_64\AOC-2023 &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Debug-windows-x86_64\AOC-2023 &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>AOC_CORE_BUILD_DLL;AOC_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Source\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>AOC_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\AOC-Core\Source;..\AOC-Core\Source\Public;Source\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -112,23 +107,18 @@ IF EXIST ..\bin\Debug-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E /Y /I .
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <ImportLibrary>..\bin\Release-windows-x86_64\AOC-Core\AOC-Core.lib</ImportLibrary>
     </Link>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Release-windows-x86_64\AOC-2022 &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Release-windows-x86_64\AOC-2022 &gt; nul)
-IF EXIST ..\bin\Release-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Release-windows-x86_64\AOC-2023 &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Release-windows-x86_64\AOC-2023 &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>AOC_CORE_BUILD_DLL;AOC_DISTRIBUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Source;Source\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>AOC_DISTRIBUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\AOC-Core\Source;..\AOC-Core\Source\Public;Source\Public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -138,43 +128,51 @@ IF EXIST ..\bin\Release-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E /Y /I
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <ImportLibrary>..\bin\Distribution-windows-x86_64\AOC-Core\AOC-Core.lib</ImportLibrary>
     </Link>
-    <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Distribution-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E /Y /I ..\bin\Distribution-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Distribution-windows-x86_64\AOC-2022 &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Distribution-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Distribution-windows-x86_64\AOC-2022 &gt; nul)
-IF EXIST ..\bin\Distribution-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E /Y /I ..\bin\Distribution-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Distribution-windows-x86_64\AOC-2023 &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Distribution-windows-x86_64\AOC-Core\AOC-Core.dll ..\bin\Distribution-windows-x86_64\AOC-2023 &gt; nul)</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Public\Application.h" />
-    <ClInclude Include="Source\Public\Assertions.h" />
-    <ClInclude Include="Source\Public\Core.h" />
-    <ClInclude Include="Source\Public\CoreMacros.h" />
-    <ClInclude Include="Source\Public\EntryPoint.h" />
-    <ClInclude Include="Source\Public\Hashing.h" />
-    <ClInclude Include="Source\Public\Input.h" />
-    <ClInclude Include="Source\Public\Math\Grid2d.h" />
-    <ClInclude Include="Source\Public\Math\NavGrid2d.h" />
-    <ClInclude Include="Source\Public\Math\Range.h" />
-    <ClInclude Include="Source\Public\Math\Tree.h" />
-    <ClInclude Include="Source\Public\Math\Vector2d.h" />
-    <ClInclude Include="Source\Public\Puzzle.h" />
-    <ClInclude Include="Source\Public\ScopedTimer.h" />
-    <ClInclude Include="Source\Public\Sharable.h" />
-    <ClInclude Include="Source\Public\Types.h" />
+    <ClInclude Include="Source\Public\AOC-2023-Application.h" />
+    <ClInclude Include="Source\Public\Puzzles.h" />
     <ClInclude Include="Source\pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Private\Application.cpp" />
-    <ClCompile Include="Source\Private\Input.cpp" />
-    <ClCompile Include="Source\Private\Puzzle.cpp" />
-    <ClCompile Include="Source\Private\ScopedTimer.cpp" />
+    <ClCompile Include="Source\Private\AOC-2023-Application.cpp" />
+    <ClCompile Include="Source\Private\Puzzle01.cpp" />
+    <ClCompile Include="Source\Private\Puzzle02.cpp" />
+    <ClCompile Include="Source\Private\Puzzle03.cpp" />
+    <ClCompile Include="Source\Private\Puzzle04.cpp" />
+    <ClCompile Include="Source\Private\Puzzle05.cpp" />
+    <ClCompile Include="Source\Private\Puzzle06.cpp" />
+    <ClCompile Include="Source\Private\Puzzle07.cpp" />
+    <ClCompile Include="Source\Private\Puzzle08.cpp" />
+    <ClCompile Include="Source\Private\Puzzle09.cpp" />
+    <ClCompile Include="Source\Private\Puzzle10.cpp" />
+    <ClCompile Include="Source\Private\Puzzle11.cpp" />
+    <ClCompile Include="Source\Private\Puzzle12.cpp" />
+    <ClCompile Include="Source\Private\Puzzle13.cpp" />
+    <ClCompile Include="Source\Private\Puzzle14.cpp" />
+    <ClCompile Include="Source\Private\Puzzle15.cpp" />
+    <ClCompile Include="Source\Private\Puzzle16.cpp" />
+    <ClCompile Include="Source\Private\Puzzle17.cpp" />
+    <ClCompile Include="Source\Private\Puzzle18.cpp" />
+    <ClCompile Include="Source\Private\Puzzle19.cpp" />
+    <ClCompile Include="Source\Private\Puzzle20.cpp" />
+    <ClCompile Include="Source\Private\Puzzle21.cpp" />
+    <ClCompile Include="Source\Private\Puzzle22.cpp" />
+    <ClCompile Include="Source\Private\Puzzle23.cpp" />
+    <ClCompile Include="Source\Private\Puzzle24.cpp" />
+    <ClCompile Include="Source\Private\Puzzle25.cpp" />
     <ClCompile Include="Source\pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AOC-Core\AOC-Core.vcxproj">
+      <Project>{2EAC41D9-1A79-9CE4-4392-8A8C2FBED172}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
