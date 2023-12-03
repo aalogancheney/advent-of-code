@@ -16,6 +16,9 @@ namespace Core::Math
         T x{ };
         T y{ };
 
+        Vector2d() : x{ }, y{ } { }
+        explicit Vector2d(T inX, T inY) : x{ inX }, y{ inY } { }
+
         static const Vector2d<T> zero;
         static const Vector2d<T> up;
         static const Vector2d<T> down;

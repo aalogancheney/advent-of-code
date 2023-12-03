@@ -17,6 +17,11 @@ namespace Core
 
             }
 
+            bool IsInRange(T value)
+            {
+                return value >= lowerBound && value <= upperBound;
+            }
+
             bool IsContainedBy(const Range& other)
             {
                 return lowerBound >= other.lowerBound

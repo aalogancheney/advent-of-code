@@ -17,7 +17,7 @@ namespace Puzzle02Helpers
         std::vector<Result> results{ };
     };
 
-    static const auto gameDelimiter{ "Game " };
+    static const auto gameDelimiter{ ": " };
     static const auto resultsDelimiter{ "; " };
     static const auto cubeDelimiter{ ", " };
     static const auto red{ "red" };
@@ -27,10 +27,10 @@ namespace Puzzle02Helpers
     auto ParseGame(const std::string& line)
     {
         Game game{ };
-        auto gameToResults{ Core::SplitString(line, ": ") };
+        auto gameToResults{ Core::SplitString(line, gameDelimiter) };
         check(gameToResults.size() == 2);
 
-        game.id = std::stoi(gameToResults[0].substr(std::string{ gameDelimiter }.length()));
+        game.id = std::stoi(gameToResults[0].substr(std::string{ "Game " }.length()));
 
         auto results{ Core::SplitString(gameToResults[1], resultsDelimiter) };
         for (const auto& result : results)
@@ -42,22 +42,11 @@ namespace Puzzle02Helpers
                 auto numberToColor{ Core::SplitString(cube, " ") };
                 check(numberToColor.size() == 2);
                 auto number{ std::stoi(numberToColor[0]) };
-                if (numberToColor[1] == red)
-                {
-                    game.results.back().red += number;
-                }
-                else if (numberToColor[1] == blue)
-                {
-                    game.results.back().blue += number;
-                }
-                else if (numberToColor[1] == green)
-                {
-                    game.results.back().green += number;
-                }
-                else
-                {
-                    checkNoEntry();
-                }
+
+                if      (numberToColor[1] == red)   { game.results.back().red += number;    }
+                else if (numberToColor[1] == blue)  { game.results.back().blue += number;   }
+                else if (numberToColor[1] == green) { game.results.back().green += number;  }
+                else                                { checkNoEntry();                       }
             }
         }
 
