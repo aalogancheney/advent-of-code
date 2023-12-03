@@ -27,21 +27,21 @@ namespace Puzzle02Helpers
     Game ParseGame(const std::string& line)
     {
         Game game{ };
-        std::vector<std::string> gameToResults{ Core::SplitString(line, ": ") };
+        auto gameToResults{ Core::SplitString(line, ": ") };
         check(gameToResults.size() == 2);
 
         game.id = std::stoi(gameToResults[0].substr(std::string{ gameDelimiter }.length()));
 
-        std::vector<std::string> results{ Core::SplitString(gameToResults[1], resultsDelimiter) };
+        auto results{ Core::SplitString(gameToResults[1], resultsDelimiter) };
         for (const auto& result : results)
         {
-            std::vector<std::string> cubes{ Core::SplitString(result, cubeDelimiter) };
+            auto cubes{ Core::SplitString(result, cubeDelimiter) };
             game.results.push_back({ });
             for (const auto& cube : cubes)
             {
-                std::vector<std::string> numberToColor{ Core::SplitString(cube, " ") };
+                auto numberToColor{ Core::SplitString(cube, " ") };
                 check(numberToColor.size() == 2);
-                int32 number{ std::stoi(numberToColor[0]) };
+                auto number{ std::stoi(numberToColor[0]) };
                 if (numberToColor[1] == red)
                 {
                     game.results.back().red += number;
@@ -97,7 +97,7 @@ void Puzzle02::SolveA(const std::vector<std::string>& input) const
         .green{ 13 },
     };
 
-    int32 sumOfValidGameIds{ 0 };
+    auto sumOfValidGameIds{ 0 };
     for (const auto& line : input)
     {
         Game game{ ParseGame(line) };
@@ -113,7 +113,7 @@ void Puzzle02::SolveB(const std::vector<std::string>& input) const
 {
     using namespace Puzzle02Helpers;
 
-    int32 sumOfPower{ 0 };
+    auto sumOfPower{ 0 };
     for (const auto& line : input)
     {
         Game game{ ParseGame(line) };
