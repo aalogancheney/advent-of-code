@@ -17,14 +17,14 @@ namespace Puzzle02Helpers
         std::vector<Result> results{ };
     };
 
-    static const std::string gameDelimiter{ "Game " };
-    static const std::string resultsDelimiter{ "; " };
-    static const std::string cubeDelimiter{ ", " };
-    static const std::string red{ "red" };
-    static const std::string blue{ "blue" };
-    static const std::string green{ "green" };
+    static const auto gameDelimiter{ "Game " };
+    static const auto resultsDelimiter{ "; " };
+    static const auto cubeDelimiter{ ", " };
+    static const auto red{ "red" };
+    static const auto blue{ "blue" };
+    static const auto green{ "green" };
 
-    Game ParseGame(const std::string& line)
+    auto ParseGame(const std::string& line)
     {
         Game game{ };
         auto gameToResults{ Core::SplitString(line, ": ") };
@@ -64,7 +64,7 @@ namespace Puzzle02Helpers
         return game;
     }
 
-    static bool IsGameValid(const Game& game, const Result& maximalResult)
+    static auto IsGameValid(const Game& game, const Result& maximalResult)
     {
         bool bIsValid{ true };
         for (const auto& result : game.results)
@@ -74,7 +74,7 @@ namespace Puzzle02Helpers
         return bIsValid;
     }
 
-    static int32 CalculatePower(const Game& game)
+    static auto CalculatePower(const Game& game)
     {
         Result minimumResult{ };
         for (const auto& result : game.results)
@@ -100,7 +100,7 @@ void Puzzle02::SolveA(const std::vector<std::string>& input) const
     auto sumOfValidGameIds{ 0 };
     for (const auto& line : input)
     {
-        Game game{ ParseGame(line) };
+        auto game{ ParseGame(line) };
         if (IsGameValid(game, maximalResult))
         {
             sumOfValidGameIds += game.id;
@@ -116,7 +116,7 @@ void Puzzle02::SolveB(const std::vector<std::string>& input) const
     auto sumOfPower{ 0 };
     for (const auto& line : input)
     {
-        Game game{ ParseGame(line) };
+        auto game{ ParseGame(line) };
         sumOfPower += CalculatePower(game);
     }
     std::cout << sumOfPower << std::endl;
