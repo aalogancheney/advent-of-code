@@ -52,15 +52,13 @@ namespace Puzzle01Helpers
 
         for (const auto& [StringNumber, Value] : StringNumberToValue)
         {
-            auto ForwardIndex{ line.find(StringNumber) };
-            if (ForwardIndex != std::string::npos && (ForwardIndex < FirstDigit.Index || FirstDigit.Index == std::string::npos))
+            if (auto ForwardIndex{ line.find(StringNumber) }; ForwardIndex != std::string::npos && (ForwardIndex < FirstDigit.Index || FirstDigit.Index == std::string::npos))
             {
                 FirstDigit.Index = ForwardIndex;
                 FirstDigit.Value = Value;
             }
 
-            auto ReverseIndex{ line.rfind(StringNumber) };
-            if (ReverseIndex != std::string::npos && (ReverseIndex > LastDigit.Index || LastDigit.Index == std::string::npos))
+            if (auto ReverseIndex{ line.rfind(StringNumber) }; ReverseIndex != std::string::npos && (ReverseIndex > LastDigit.Index || LastDigit.Index == std::string::npos))
             {
                 LastDigit.Index = ReverseIndex;
                 LastDigit.Value = Value;
