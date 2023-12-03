@@ -17,33 +17,40 @@ namespace Puzzle02Helpers
         std::vector<Result> results{ };
     };
 
+    static const std::string gameDelimiter{ "Game " };
+    static const std::string resultsDelimiter{ "; " };
+    static const std::string cubeDelimiter{ ", " };
+    static const std::string red{ "red" };
+    static const std::string blue{ "blue" };
+    static const std::string green{ "green" };
+
     Game ParseGame(const std::string& line)
     {
         Game game{ };
         std::vector<std::string> gameToResults{ Core::SplitString(line, ": ") };
         check(gameToResults.size() == 2);
 
-        game.id = std::stoi(gameToResults[0].substr(std::string{ "Game " }.length()));
+        game.id = std::stoi(gameToResults[0].substr(std::string{ gameDelimiter }.length()));
 
-        std::vector<std::string> results{ Core::SplitString(gameToResults[1], "; ") };
+        std::vector<std::string> results{ Core::SplitString(gameToResults[1], resultsDelimiter) };
         for (const auto& result : results)
         {
-            std::vector<std::string> cubes{ Core::SplitString(result, ", ") };
+            std::vector<std::string> cubes{ Core::SplitString(result, cubeDelimiter) };
             game.results.push_back({ });
             for (const auto& cube : cubes)
             {
                 std::vector<std::string> numberToColor{ Core::SplitString(cube, " ") };
                 check(numberToColor.size() == 2);
                 int32 number{ std::stoi(numberToColor[0]) };
-                if (numberToColor[1] == "red")
+                if (numberToColor[1] == red)
                 {
                     game.results.back().red += number;
                 }
-                else if (numberToColor[1] == "blue")
+                else if (numberToColor[1] == blue)
                 {
                     game.results.back().blue += number;
                 }
-                else if (numberToColor[1] == "green")
+                else if (numberToColor[1] == green)
                 {
                     game.results.back().green += number;
                 }
