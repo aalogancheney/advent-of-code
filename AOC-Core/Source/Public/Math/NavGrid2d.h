@@ -3,7 +3,7 @@
 #include "pch.h"
 
 #include "Grid2d.h"
-#include "Vector2d.h"
+#include "Vector2.h"
 
 namespace Core::Math
 {
@@ -222,31 +222,19 @@ namespace Core::Math
     template<typename T>
     void NavGrid2d<T>::BuildHeuristicCosts(const Grid2dCoordinate& to)
     {
-        // TODO: Build iterable version of Grid2d.
-        for (size_t y{ 0 }; y < grid.GetHeight(); ++y)
+        for (auto& [coordinate, value] : grid)
         {
-            for (size_t x{ 0 }; x < grid.GetWidth(); ++x)
-            {
-                Node& node{ grid.at(x, y) };
-
-                // Heuristic cost is the manhattan distance. Keeps the values as integrals.
-                node.heuristicCost = (x > to.x ? x - to.x : to.x - x) + (y > to.y ? y - to.y : to.y - y) - 1;
-            }
+            value.heuristicCost = (coordinate.x > to.x ? coordinate.x - to.x : to.x - coordinate.x) + (coordinate.y > to.y ? coordinate.y - to.y : to.y - coordinate.y) - 1;
         }
     }
 
     template<typename T>
     void NavGrid2d<T>::ResetSearch()
     {
-        // TODO: Build iterable version of Grid2d.
-        for (size_t y{ 0 }; y < grid.GetHeight(); ++y)
+        for (auto& [coordinate, value] : grid)
         {
-            for (size_t x{ 0 }; x < grid.GetWidth(); ++x)
-            {
-                Node& node{ grid.at(x, y) };
-                node.pathCost = node.heuristicCost = 0;
-                node.parent = nullptr;
-            }
+            value.pathCost = value.heuristicCost = 0;
+            value.parent = nullptr;
         }
     }
 }

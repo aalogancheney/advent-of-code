@@ -7,16 +7,16 @@ namespace Puzzle03Helpers
     constexpr char period{ '.' };
     constexpr char gear{ '*' };
 
-    static std::vector<Vector2d32> adjacentCoordinates
+    static std::vector<Vector2_32> adjacentCoordinates
     {
-        Vector2d32{  0, -1 }, // Left
-        Vector2d32{ -1, -1 }, // Top-left
-        Vector2d32{ -1,  0 }, // Top
-        Vector2d32{ -1,  1 }, // Top-right
-        Vector2d32{  0,  1 }, // Right
-        Vector2d32{  1,  1 }, // Bottom-right
-        Vector2d32{  1,  0 }, // Bottom
-        Vector2d32{  1, -1 }, // Bottom-left
+        Vector2_32{  0, -1 }, // Left
+        Vector2_32{ -1, -1 }, // Top-left
+        Vector2_32{ -1,  0 }, // Top
+        Vector2_32{ -1,  1 }, // Top-right
+        Vector2_32{  0,  1 }, // Right
+        Vector2_32{  1,  1 }, // Bottom-right
+        Vector2_32{  1,  0 }, // Bottom
+        Vector2_32{  1, -1 }, // Bottom-left
     };
 
     static auto IsGear(char c) { return c == gear; }
@@ -24,26 +24,30 @@ namespace Puzzle03Helpers
 
     static auto IsCoordinateAdjacentToSymbol(const std::vector<std::string>& input, int32 x, int32 y)
     {
+        check(input.size() > 0);
+        check(input[0].size() > 0);
         static Core::Math::Range<int32> xBounds{ 0, static_cast<int32>(input.size() - 1) };
         static Core::Math::Range<int32> yBounds{ 0, static_cast<int32>(input[0].size() - 1) };
         bool bIsNeighboringSymbol{ false };
         for (const auto& adjacentCoordinate : adjacentCoordinates)
         {
-            Vector2d32 neighbor{ x + adjacentCoordinate.x, y + adjacentCoordinate.y };
+            Vector2_32 neighbor{ x + adjacentCoordinate.x, y + adjacentCoordinate.y };
             const bool bIsInBounds{ xBounds.IsInRange(neighbor.x) && yBounds.IsInRange(neighbor.y) };
             bIsNeighboringSymbol |= bIsInBounds && IsSymbol(input[neighbor.x][neighbor.y]);
         }
         return bIsNeighboringSymbol;
     }
 
-    static auto GetAdjacentGears(const std::vector<std::string>& input, int32 x, int32 y, std::unordered_set<Vector2d32>& adjacentGears)
+    static auto GetAdjacentGears(const std::vector<std::string>& input, int32 x, int32 y, std::unordered_set<Vector2_32>& adjacentGears)
     {
+        check(input.size() > 0);
+        check(input[0].size() > 0);
         static Core::Math::Range<int32> xBounds{ 0, static_cast<int32>(input.size() - 1) };
         static Core::Math::Range<int32> yBounds{ 0, static_cast<int32>(input[0].size() - 1) };
         bool bIsNeighboringSymbol{ false };
         for (const auto& adjacentCoordinate : adjacentCoordinates)
         {
-            Vector2d32 neighbor{ x + adjacentCoordinate.x, y + adjacentCoordinate.y };
+            Vector2_32 neighbor{ x + adjacentCoordinate.x, y + adjacentCoordinate.y };
             const bool bIsInBounds{ xBounds.IsInRange(neighbor.x) && yBounds.IsInRange(neighbor.y) };
             if (bIsInBounds && IsGear(input[neighbor.x][neighbor.y]))
             {
@@ -60,7 +64,7 @@ void Puzzle03::SolveA(const std::vector<std::string>& input) const
     auto sum{ 0 };
 
     // Traverse each row top-to-bottom, and each column from right-to-left. This helps
-    // build numbers in-place.
+    // build numbers starting in the 1's, then 10's, etc.
     for (int32 row{ 0 }; row < input.size(); ++row)
     {
         for (int32 col{ static_cast<int32>(input[row].length() - 1) }; col >= 0; --col)
@@ -96,12 +100,12 @@ void Puzzle03::SolveB(const std::vector<std::string>& input) const
     using namespace Puzzle03Helpers;
 
     // Run one pass on grid to find all gears.
-    std::unordered_map<Vector2d32, std::vector<int32>> gears{ };
+    std::unordered_map<Vector2_32, std::vector<int32>> gears{ };
     for (int32 row{ 0 }; row < input.size(); ++row)
     {
         for (int32 col{ static_cast<int32>(input[row].length() - 1) }; col >= 0; --col)
         {
-            if (IsGear(input[row][col])) { gears[Vector2d32{ row, col }] = { }; }
+            if (IsGear(input[row][col])) { gears[Vector2_32{ row, col }] = { }; }
         }
     }
 
@@ -115,7 +119,7 @@ void Puzzle03::SolveB(const std::vector<std::string>& input) const
             {
                 // Found start of digit. Create the number and add the resulting number to
                 // the set of all adjacent gears.
-                std::unordered_set<Vector2d32> neighboringGears{ };
+                std::unordered_set<Vector2_32> neighboringGears{ };
                 int32 number{ 0 };
                 int32 digit{ 1 };
                 while (std::isdigit(input[row][col]))

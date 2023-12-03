@@ -101,14 +101,10 @@ void Puzzle08::SolveA(const std::vector<std::string>& input) const
     TreeGrid treeGrid{ CreateGrid(input) };
 
     auto visibleTrees{ 0 };
-    for (auto row{ 0 }; row < treeGrid.GetWidth(); ++row)
+    for (const auto& [coordinate, value] : treeGrid)
     {
-        for (auto col{ 0 }; col < treeGrid.GetHeight(); ++col)
-        {
-            visibleTrees += CheckVisibility(treeGrid, row, col);
-        }
+        visibleTrees += CheckVisibility(treeGrid, coordinate.x, coordinate.y);
     }
-
     std::cout << visibleTrees << std::endl;
 }
 
@@ -119,12 +115,9 @@ void Puzzle08::SolveB(const std::vector<std::string>& input) const
     TreeGrid treeGrid{ CreateGrid(input) };
     TreeGrid visibilityScoreGrid{ GetVisibilityScoreGrid(treeGrid) };
     auto max{ 0 };
-    for (auto row{ 0 }; row < visibilityScoreGrid.GetWidth(); ++row)
+    for (const auto& [coordinate, value] : treeGrid)
     {
-        for (auto col{ 0 }; col < visibilityScoreGrid.GetHeight(); ++col)
-        {
-            max = std::max(max, visibilityScoreGrid.at(row, col));
-        }
+        max = std::max(max, visibilityScoreGrid.at(coordinate.x, coordinate.y));
     }
     std::cout << max << std::endl;
 }

@@ -8,5 +8,5 @@
 #include "Math/Range.h"
 #include "Math/Grid2d.h"
 #include "Math/NavGrid2d.h"
-#include "Math/Vector2d.h"
+#include "Math/Vector2.h"
 #include "Hashing.h"

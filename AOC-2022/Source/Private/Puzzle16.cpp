@@ -24,6 +24,12 @@ namespace Puzzle16Helpers
             path.emplace_back(std::make_pair(startingValve, initialTime));
         }
 
+        // Returns true if the runner can reach the specified valve with the remaining time.
+        auto CanReach(Valve* valve) const
+        {
+            return GetCurrentValve()->traversalCosts[valve] <= GetRemainingTime();
+        }
+
         // Moves to the specified valve and returns the cost of traveling to that node.
         auto MoveToAndOpen(Valve* valve)
         {
@@ -40,12 +46,6 @@ namespace Puzzle16Helpers
             check(path.size() > 0);
             path.back().first->bOpened = false;
             path.pop_back();
-        }
-
-        // Returns true if the runner can reach the specified valve with the remaining time.
-        auto CanReach(Valve* valve) const
-        {
-            return GetCurrentValve()->traversalCosts[valve] <= GetRemainingTime();
         }
 
         // Returns a vector of all valves (with flow) that can be reached given the

@@ -7,26 +7,26 @@ namespace Puzzle09Helpers
     using namespace Core;
     using namespace Core::Math;
 
-    void UpdateHeadPosition(const char direction, Vector2d32& headPosition)
+    void UpdateHeadPosition(const char direction, Vector2_32& headPosition)
     {
         switch (direction)
         {
         case 'U':
-            headPosition += Vector2d32::up;
+            headPosition += Vector2_32::up;
             break;
         case 'D':
-            headPosition += Vector2d32::down;
+            headPosition += Vector2_32::down;
             break;
         case 'L':
-            headPosition += Vector2d32::left;
+            headPosition += Vector2_32::left;
             break;
         case 'R':
-            headPosition += Vector2d32::right;
+            headPosition += Vector2_32::right;
             break;
         }
     }
 
-    void UpdateTailPosition(const Vector2d32& headPosition, Vector2d32& tailPosition)
+    void UpdateTailPosition(const Vector2_32& headPosition, Vector2_32& tailPosition)
     {
         auto tailToHead{ headPosition - tailPosition };
         auto length{ tailToHead.Length() };
@@ -47,11 +47,10 @@ void Puzzle09::SolveA(const std::vector<std::string>& input) const
 {
     using namespace Puzzle09Helpers;
 
-    Vector2d32 headPosition{ Vector2d32::zero };
-    Vector2d32 tailPosition{ headPosition };
+    Vector2_32 headPosition{ Vector2_32::zero };
+    Vector2_32 tailPosition{ headPosition };
 
-    // TODO: Implement hash function for Vector2D<T>.
-    std::unordered_set<Vector2d32> visitedPositions{ tailPosition };
+    std::unordered_set<Vector2_32> visitedPositions{ tailPosition };
 
     for (const auto& command : input)
     {
@@ -73,10 +72,10 @@ void Puzzle09::SolveB(const std::vector<std::string>& input) const
 {
     using namespace Puzzle09Helpers;
 
-    auto positions{ std::vector<Vector2d32>{ 10 } };
-    Vector2d32& headPosition{ positions[0] };
-    Vector2d32& tailPosition{ positions[9] };
-    std::unordered_set<Vector2d32> visitedPositions{ tailPosition };
+    auto positions{ std::vector<Vector2_32>{ 10 } };
+    Vector2_32& headPosition{ positions[0] };
+    Vector2_32& tailPosition{ positions[9] };
+    std::unordered_set<Vector2_32> visitedPositions{ tailPosition };
 
     for (const auto& command : input)
     {

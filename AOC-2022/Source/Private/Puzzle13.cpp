@@ -60,6 +60,7 @@ namespace Puzzle13Helpers
         }
 
         checkNoEntry();
+        return 0;
     }
 
     class Packet

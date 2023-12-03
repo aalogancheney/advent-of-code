@@ -9,18 +9,18 @@ namespace Puzzle15Helpers
 {
     struct SensorCovering
     {
-        Vector2d64 nearestBeaconCoordinate{ 0, 0 };
+        Vector2_64 nearestBeaconCoordinate{ 0, 0 };
         int64 manhattanDistance{ 0 };
     };
 
-    int64 CalculateManhattanDistance(const Vector2d64& lhs, const Vector2d64& rhs)
+    int64 CalculateManhattanDistance(const Vector2_64& lhs, const Vector2_64& rhs)
     {
         return std::abs(lhs.x - rhs.x) + std::abs(lhs.y - rhs.y);
     }
 
-    std::unordered_map<Vector2d64, SensorCovering> CreateSensorBeaconMapping(const std::vector<std::string>& input)
+    std::unordered_map<Vector2_64, SensorCovering> CreateSensorBeaconMapping(const std::vector<std::string>& input)
     {
-        std::unordered_map<Vector2d64, SensorCovering> sensorToBeaconMapping{ };
+        std::unordered_map<Vector2_64, SensorCovering> sensorToBeaconMapping{ };
         sensorToBeaconMapping.reserve(input.size());
 
         for (const auto& line : input)
@@ -30,11 +30,11 @@ namespace Puzzle15Helpers
             std::string sensorString{ sensorsAndBeacons[0].substr(10) };
             std::vector<std::string> sensorCoordinateString{ Core::SplitString(sensorString, ",") };
             check(sensorCoordinateString.size() == 2);
-            Vector2d64 sensorCoordinate{ std::stoll(sensorCoordinateString[0].substr(2)), std::stoll(sensorCoordinateString[1].substr(3)) };
+            Vector2_64 sensorCoordinate{ std::stoll(sensorCoordinateString[0].substr(2)), std::stoll(sensorCoordinateString[1].substr(3)) };
             std::string beaconString{ sensorsAndBeacons[1].substr(22) };
             std::vector<std::string> beaconCoordinateString{ Core::SplitString(beaconString, ",") };
             check(beaconCoordinateString.size() == 2);
-            Vector2d64 beaconCoordinate{ std::stoll(beaconCoordinateString[0].substr(2)), std::stoll(beaconCoordinateString[1].substr(3)) };
+            Vector2_64 beaconCoordinate{ std::stoll(beaconCoordinateString[0].substr(2)), std::stoll(beaconCoordinateString[1].substr(3)) };
             sensorToBeaconMapping.emplace(sensorCoordinate, SensorCovering{
                 .nearestBeaconCoordinate{ beaconCoordinate },
                 .manhattanDistance{ CalculateManhattanDistance(sensorCoordinate, beaconCoordinate) },
@@ -56,7 +56,7 @@ void Puzzle15::SolveA(const std::vector<std::string>& input) const
     const auto targetY{ 2000000ULL };
     for (const auto& [sensor, sensorCovering] : sensorToBeaconMapping)
     {
-        const auto distanceToTargetLine{ CalculateManhattanDistance(sensor, Vector2d64{ sensor.x, targetY }) };
+        const auto distanceToTargetLine{ CalculateManhattanDistance(sensor, Vector2_64{ sensor.x, targetY }) };
         if (sensorCovering.manhattanDistance <= distanceToTargetLine) { continue; }
         const auto overhead{ std::abs(distanceToTargetLine - sensorCovering.manhattanDistance) };
         invalidRanges.emplace_back(HorizontalCovering{ sensor.x - overhead, sensor.x + overhead });
@@ -96,7 +96,7 @@ void Puzzle15::SolveB(const std::vector<std::string>& input) const
 
         for (const auto& [sensor, sensorCovering] : sensorToBeaconMapping)
         {
-            const auto distanceToTargetLine{ CalculateManhattanDistance(sensor, Vector2d64{ sensor.x, height }) };
+            const auto distanceToTargetLine{ CalculateManhattanDistance(sensor, Vector2_64{ sensor.x, height }) };
             if (sensorCovering.manhattanDistance <= distanceToTargetLine) { continue; }
             const auto overhead{ std::abs(distanceToTargetLine - sensorCovering.manhattanDistance) };
             invalidRanges.emplace_back(HorizontalCovering{ std::max(sensor.x - overhead, 0LL), std::min(sensor.x + overhead, 4000000LL) });

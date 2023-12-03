@@ -160,7 +160,7 @@ IF EXIST ..\bin\Distribution-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E 
     <ClInclude Include="Source\Public\Math\NavGrid2d.h" />
     <ClInclude Include="Source\Public\Math\Range.h" />
     <ClInclude Include="Source\Public\Math\Tree.h" />
-    <ClInclude Include="Source\Public\Math\Vector2d.h" />
+    <ClInclude Include="Source\Public\Math\Vector2.h" />
     <ClInclude Include="Source\Public\Puzzle.h" />
     <ClInclude Include="Source\Public\ScopedTimer.h" />
     <ClInclude Include="Source\Public\Sharable.h" />
