@@ -9,12 +9,10 @@ namespace Core::Math
         check(input.size() > 0);
         check(input[0].size() > 0);
         Grid2d<char, int32> grid{ static_cast<int32>(input[0].size()), static_cast<int32>(input.size()) };
-        for (auto row{ 0 }; row < input.size(); ++row)
+        for (auto& [coordinate, value] : grid)
         {
-            for (auto col{ 0 }; col < input[row].size(); ++col)
-            {
-                grid.at(col, row) = input[row][col];
-            }
+            // Grid iterator traverses in row-major order. Grab input in the correct order.
+            grid.at(coordinate) = input[coordinate.y][coordinate.x];
         }
         return grid;
     }

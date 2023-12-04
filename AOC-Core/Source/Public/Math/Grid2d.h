@@ -3,12 +3,10 @@
 #include "pch.h"
 
 #include "Vector2.h"
+#include "Concepts.h"
 
 namespace Core::Math
 {
-    template<typename T>
-    concept SignedIntegral = std::is_integral_v<T> && std::is_signed_v<T>;
-
     template<typename TElement, SignedIntegral TCoordinate>
     class Grid2d
     {

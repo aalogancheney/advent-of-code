@@ -15,75 +15,15 @@ namespace Puzzle03Helpers
     constexpr char period{ '.' };
     constexpr char gear{ '*' };
 
-    static std::vector<Grid::Grid2dCoordinate> adjacentCoordinates
-    {
-        {  0, -1 }, // Left
-        { -1, -1 }, // Top-left
-        { -1,  0 }, // Top
-        { -1,  1 }, // Top-right
-        {  0,  1 }, // Right
-        {  1,  1 }, // Bottom-right
-        {  1,  0 }, // Bottom
-        {  1, -1 }, // Bottom-left
-    };
-
-    static auto IsGear(char c) { return c == gear; }
-    static auto IsSymbol(char c) { return c != period && !std::isdigit(c); }
-
-    static auto IsCoordinateAdjacentToSymbol(const Grid& grid, Grid::Grid2dCoordinate coordinate)
-    {
-        Core::Math::Range<int32> xBounds{ 0, grid.GetWidth() };
-        Core::Math::Range<int32> yBounds{ 0, grid.GetHeight() };
-
-        bool bIsNeighboringSymbol{ false };
-        for (const auto& adjacentCoordinate : adjacentCoordinates)
-        {
-            const auto neighbor{ coordinate + adjacentCoordinate };
-            const bool bIsInBounds{ xBounds.IsInRange(neighbor.x) && yBounds.IsInRange(neighbor.y) };
-            bIsNeighboringSymbol |= bIsInBounds && IsSymbol(grid.at(neighbor));
-        }
-        return bIsNeighboringSymbol;
-    }
-
-    /*static auto IsCoordinateAdjacentToSymbol(const std::vector<std::string>& input, int32 x, int32 y)
-    {
-        check(input.size() > 0);
-        check(input[0].size() > 0);
-        static Core::Math::Range<int32> xBounds{ 0, static_cast<int32>(input.size() - 1) };
-        static Core::Math::Range<int32> yBounds{ 0, static_cast<int32>(input[0].size() - 1) };
-        bool bIsNeighboringSymbol{ false };
-        for (const auto& adjacentCoordinate : adjacentCoordinates)
-        {
-            Vector2_32 neighbor{ x + adjacentCoordinate.x, y + adjacentCoordinate.y };
-            const bool bIsInBounds{ xBounds.IsInRange(neighbor.x) && yBounds.IsInRange(neighbor.y) };
-            bIsNeighboringSymbol |= bIsInBounds && IsSymbol(input[neighbor.x][neighbor.y]);
-        }
-        return bIsNeighboringSymbol;
-    }*/
-
-    static auto GetAdjacentGears(const std::vector<std::string>& input, int32 x, int32 y, std::unordered_set<Vector2_32>& adjacentGears)
-    {
-        check(input.size() > 0);
-        check(input[0].size() > 0);
-        static Core::Math::Range<int32> xBounds{ 0, static_cast<int32>(input.size() - 1) };
-        static Core::Math::Range<int32> yBounds{ 0, static_cast<int32>(input[0].size() - 1) };
-        for (const auto& adjacentCoordinate : adjacentCoordinates)
-        {
-            Vector2_32 neighbor{ x + static_cast<int32>(adjacentCoordinate.x), y + static_cast<int32>(adjacentCoordinate.y) };
-            const bool bIsInBounds{ xBounds.IsInRange(neighbor.x) && yBounds.IsInRange(neighbor.y) };
-            if (bIsInBounds && IsGear(input[neighbor.x][neighbor.y]))
-            {
-                adjacentGears.emplace(neighbor);
-            }
-        }
-    }
+    auto IsGear(char c) { return c == gear; }
+    auto IsSymbol(char c) { return c != period && !std::isdigit(c); }
 
     auto GetAdjacentSymbolCoordinates(const Grid& grid, const Grid::Grid2dCoordinate& coordinate, std::unordered_set<Grid::Grid2dCoordinate>& adjacentSymbolCoordinates)
     {
         Core::Math::Range<int32> xBounds{ 0, grid.GetWidth() - 1 };
         Core::Math::Range<int32> yBounds{ 0, grid.GetHeight() - 1 };
 
-        for (const auto& adjacentCoordinate : adjacentCoordinates)
+        for (const auto& adjacentCoordinate : Grid::Grid2dCoordinate::cartesianNeighboringDirectionsWithDiagonals)
         {
             const auto neighbor{ coordinate + adjacentCoordinate };
             const bool bIsInBounds{ xBounds.IsInRange(neighbor.x) && yBounds.IsInRange(neighbor.y) };
@@ -121,7 +61,7 @@ namespace Puzzle03Helpers
                 while (true)
                 {
                     const auto& [runnerCoordinate, runnerValue] { *iter };
-                    if (runnerCoordinate.x != coordinate.x || !std::isdigit(runnerValue)) { break; }
+                    if (runnerCoordinate.y != coordinate.y || !std::isdigit(runnerValue)) { break; }
 
                     number += digit * std::stoi(std::string{ runnerValue });
                     digit *= 10;
@@ -135,6 +75,7 @@ namespace Puzzle03Helpers
                 }
             }
         }
+
         return symbols;
     }
 }
@@ -149,7 +90,10 @@ void Puzzle03::SolveA(const std::vector<std::string>& input) const
     auto sum{ 0 };
     for (const auto& [coordinate, symbol] : symbols)
     {
-        //sum += std::ranges::accumulate()
+        for (auto& value : symbol.neighboringNumbers)
+        {
+            sum += value;
+        }
     }
     std::cout << sum << std::endl;
 }

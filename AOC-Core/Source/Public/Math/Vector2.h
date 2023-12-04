@@ -22,6 +22,16 @@ namespace Core::Math
         static const Vector2<T> down;
         static const Vector2<T> left;
         static const Vector2<T> right;
+        static const Vector2<T> rightUp;
+        static const Vector2<T> leftUp;
+        static const Vector2<T> rightDown;
+        static const Vector2<T> leftDown;
+        
+        template<SignedArithmetic U>
+        using NeighboringDirectionCollection = std::unordered_set<Vector2<U>>;
+
+        static const NeighboringDirectionCollection<T> cartesianNeighboringDirections;
+        static const NeighboringDirectionCollection<T> cartesianNeighboringDirectionsWithDiagonals;
 
         bool operator==(const Vector2<T>&) const = default;
         auto operator<=>(const Vector2<T>&) const = default;
@@ -53,20 +63,39 @@ namespace Core::Math
         Vector2<T>& Normalize();
     };
 
-    template<SignedArithmetic T>
-    /*static*/ const Vector2<T> Vector2<T>::zero{ static_cast<T>(0), static_cast<T>(0) };
+    template<SignedArithmetic T> const Vector2<T> Vector2<T>::zero      {  0,  0 };
+    template<SignedArithmetic T> const Vector2<T> Vector2<T>::up        {  0,  1 };
+    template<SignedArithmetic T> const Vector2<T> Vector2<T>::down      {  0, -1 };
+    template<SignedArithmetic T> const Vector2<T> Vector2<T>::left      { -1,  0 };
+    template<SignedArithmetic T> const Vector2<T> Vector2<T>::right     {  1,  0 };
+    template<SignedArithmetic T> const Vector2<T> Vector2<T>::rightUp   {  1,  1 };
+    template<SignedArithmetic T> const Vector2<T> Vector2<T>::leftUp    { -1,  1 };
+    template<SignedArithmetic T> const Vector2<T> Vector2<T>::rightDown {  1, -1 };
+    template<SignedArithmetic T> const Vector2<T> Vector2<T>::leftDown  { -1, -1 };
 
     template<SignedArithmetic T>
-    /*static*/ const Vector2<T> Vector2<T>::up{ static_cast<T>(0), static_cast<T>(1) };
+    const Vector2<T>::NeighboringDirectionCollection<T> Vector2<T>::cartesianNeighboringDirections
+    {
+        // Static initialization ordering means the named variables can't be used here.
+        {  0,  1 },
+        {  0, -1 },
+        { -1,  0 },
+        {  1,  0 },
+    };
 
     template<SignedArithmetic T>
-    /*static*/ const Vector2<T> Vector2<T>::down{ static_cast<T>(0), static_cast<T>(-1) };
-
-    template<SignedArithmetic T>
-    /*static*/ const Vector2<T> Vector2<T>::left{ static_cast<T>(-1), static_cast<T>(0) };
-
-    template<SignedArithmetic T>
-    /*static*/ const Vector2<T> Vector2<T>::right{ static_cast<T>(1), static_cast<T>(0) };
+    const Vector2<T>::NeighboringDirectionCollection<T> Vector2<T>::cartesianNeighboringDirectionsWithDiagonals
+    {
+        // Static initialization ordering means the named variables can't be used here.
+        {  0,  1 },
+        {  0, -1 },
+        { -1,  0 },
+        {  1,  0 },
+        {  1,  1 },
+        { -1,  1 },
+        {  1, -1 },
+        { -1, -1 },
+    };
 
     template<SignedArithmetic T>
     std::ostream& operator<<(std::ostream& output, const Vector2<T>& v)
