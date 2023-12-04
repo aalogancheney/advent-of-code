@@ -4,17 +4,19 @@
 
 #include "Vector2.h"
 
-DECL_Vector2(Grid2dCoordinate, size_t);
-
 namespace Core::Math
 {
     template<typename T>
+    concept SignedIntegral = std::is_integral_v<T> && std::is_signed_v<T>;
+
+    template<typename TElement, SignedIntegral TCoordinate>
     class Grid2d
     {
     public:
-        using Grid2dElement = std::tuple<Grid2dCoordinate, T>;
+        using Grid2dCoordinate = Vector2<TCoordinate>;
+        using Grid2dElement = std::tuple<Grid2dCoordinate, TElement>;
         
-        Grid2d(size_t inWidth, size_t inHeight)
+        Grid2d(TCoordinate inWidth, TCoordinate inHeight)
             : width{ inWidth }
             , height{ inHeight }
             , elements(width * height)
@@ -25,71 +27,73 @@ namespace Core::Math
             }
         }
 
-        std::vector<Grid2dElement>::iterator begin() noexcept { return elements.begin(); }
-        std::vector<Grid2dElement>::iterator end() noexcept { return elements.end(); }
-        std::vector<Grid2dElement>::const_iterator begin() const noexcept { return elements.begin(); }
-        std::vector<Grid2dElement>::const_iterator end() const noexcept { return elements.end(); }
-        std::vector<Grid2dElement>::const_iterator cbegin() const noexcept { return elements.cbegin(); }
-        std::vector<Grid2dElement>::const_iterator cend() const noexcept { return elements.cend(); }
-        std::vector<Grid2dElement>::reverse_iterator rbegin() noexcept { return elements.rbegin(); }
-        std::vector<Grid2dElement>::reverse_iterator rend() noexcept { return elements.rend(); }
-        std::vector<Grid2dElement>::const_reverse_iterator rbegin() const noexcept { return elements.rbegin(); }
-        std::vector<Grid2dElement>::const_reverse_iterator rend() const noexcept { return elements.rend(); }
-        std::vector<Grid2dElement>::const_reverse_iterator crbegin() const noexcept { return elements.crbegin(); }
-        std::vector<Grid2dElement>::const_reverse_iterator crend() const noexcept { return elements.crend(); }
+        auto begin() noexcept { return elements.begin(); }
+        auto end() noexcept { return elements.end(); }
+        auto begin() const noexcept { return elements.begin(); }
+        auto end() const noexcept { return elements.end(); }
+        auto cbegin() const noexcept { return elements.cbegin(); }
+        auto cend() const noexcept { return elements.cend(); }
+        auto rbegin() noexcept { return elements.rbegin(); }
+        auto rend() noexcept { return elements.rend(); }
+        auto rbegin() const noexcept { return elements.rbegin(); }
+        auto rend() const noexcept { return elements.rend(); }
+        auto crbegin() const noexcept { return elements.crbegin(); }
+        auto crend() const noexcept { return elements.crend(); }
 
-        size_t GetWidth() const noexcept { return width; }
-        size_t GetHeight() const noexcept { return height; }
-        size_t size() const noexcept { return elements.size(); }
+        auto GetWidth() const noexcept { return width; }
+        auto GetHeight() const noexcept { return height; }
+        auto size() const noexcept { return elements.size(); }
 
-        Grid2dCoordinate IndexToCoordinate(size_t index) const
+        auto IndexToCoordinate(TCoordinate index) const
         {
             check(index < size());
             return Grid2dCoordinate{ index % width, index / width };
         }
 
-        size_t CoordinateToIndex(Grid2dCoordinate coordinate) const
+        auto CoordinateToIndex(Grid2dCoordinate coordinate) const
         {
             check(coordinate.x < width);
             check(coordinate.y < height);
             return coordinate.x + coordinate.y * height;
         }
 
-        constexpr const T& at(size_t x, size_t y) const
+        constexpr const TElement& at(TCoordinate x, TCoordinate y) const
         {
-            return std::get<1>(elements.at(CoordinateToIndex(Grid2dCoordinate{ x, y })));
+            return std::get<1>(elements.at(CoordinateToIndex({ x, y })));
         }
 
-        constexpr T& at(size_t x, size_t y)
+        constexpr TElement& at(TCoordinate x, TCoordinate y)
         {
-            return std::get<1>(elements.at(CoordinateToIndex(Grid2dCoordinate{ x, y })));
+            return std::get<1>(elements.at(CoordinateToIndex({ x, y })));
         }
 
-        constexpr const T& at(Grid2dCoordinate coordinate) const
+        constexpr const TElement& at(Grid2dCoordinate coordinate) const
         {
             return std::get<1>(elements.at(CoordinateToIndex(coordinate)));
         }
 
-        constexpr T& at(Grid2dCoordinate coordinate)
+        constexpr TElement& at(Grid2dCoordinate coordinate)
         {
             return std::get<1>(elements.at(CoordinateToIndex(coordinate)));
         }
 
-        void Print() const
+        auto Print() const
         {
-            for (auto rowIndex{ 0 }; rowIndex < GetHeight(); ++rowIndex)
+            for (const auto& [coordinate, value] : elements)
             {
-                for (auto colIndex{ 0 }; colIndex < GetWidth(); ++colIndex)
+                if (coordinate.x == 0)
                 {
-                    std::cout << at(colIndex, rowIndex);
+                    std::cout << "\n";
                 }
-                std::cout << "\n";
+                std::cout << value;
             }
         }
 
     private:
-        size_t width{ 0 };
-        size_t height{ 0 };
+        TCoordinate width{ 0 };
+        TCoordinate height{ 0 };
         std::vector<Grid2dElement> elements{ };
     };
+
+    CORE_API Grid2d<char, int32> ConstructGrid(const std::vector<std::string>& input);
 }

@@ -8,3 +8,4 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <locale>
+#include <ranges>

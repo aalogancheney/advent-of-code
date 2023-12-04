@@ -9,4 +9,5 @@
 #include "Math/Grid2d.h"
 #include "Math/NavGrid2d.h"
 #include "Math/Vector2.h"
+#include "Math/Concepts.h"
 #include "Hashing.h"

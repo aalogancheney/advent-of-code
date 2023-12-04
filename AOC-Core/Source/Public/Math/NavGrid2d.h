@@ -4,6 +4,7 @@
 
 #include "Grid2d.h"
 #include "Vector2.h"
+#include "Concepts.h"
 
 namespace Core::Math
 {
@@ -12,67 +13,72 @@ namespace Core::Math
     // 2. Find a path from one position to another unknown position (searching for a particular value). This is
     //    useful if you don't know exactly where your target position is, or if there are multiple candidates.
     //    This uses A* with a heuristic value of 0, which degenerates to Dijkstra's, so an optimal path will be found.
-    template<typename T>
+    template<typename TElement, SignedIntegral TSize>
     class NavGrid2d
     {
     public:
         // Additional criteria can be applied when building the adjacency list for each node. The first argument is the current
         // node's value; the second argument is the neighboring node's value.
-        using AdjacencyCriteria = std::function<bool(const T&, const T&)>;
+        using AdjacencyCriteria = std::function<bool(const TElement&, const TElement&)>;
 
         // Default adjacency criteria that does no filtering. This is probably undesired for most use-cases, since a complete
         // adjacency set will degenerate into moving diagonally/horizontally until the target is reached, since there are no barriers.
         static AdjacencyCriteria allNeighbors;
 
-        NavGrid2d(const Grid2d<T>& inGrid, AdjacencyCriteria adjacencyCriteria)
-            : grid{ inGrid.GetWidth(), inGrid.GetHeight() }
+        using NavGrid2dCoordinate = Vector2<TSize>;
+
+        NavGrid2d(TSize inWidth, TSize inHeight, AdjacencyCriteria adjacencyCriteria)
+            : grid{ inWidth, inHeight }
         {
-            InitializeNavGrid(inGrid);
+            //InitializeNavGrid(inGrid);
             BuildAdjacencyList(adjacencyCriteria);
         }
 
         // Tries to find a path connecting "from" and "to" positions on the grid. Returns true if a path was found, and
         // the outPath vector will be filled with the steps (including the start and end points). Returns false if no path
         // could be found.
-        bool TryFindPath(std::vector<Grid2dCoordinate>& outPath, const Grid2dCoordinate& from, const Grid2dCoordinate& to);
+        bool TryFindPath(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, const NavGrid2dCoordinate& to);
         
         // Tries to find a path connecting "from" and any position in the grid with the provided value. This will always
         // find the shortest path. Returns true if a path was found, and the outPath vector will be filled with the steps
         // (including the start and end points). Returns false if no path could be found.
-        bool TryFindPath(std::vector<Grid2dCoordinate>& outPath, const Grid2dCoordinate& from, const T& any);
+        bool TryFindPath(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, const TElement& any);
 
     private:
-        // Helper struct to gather all information needed to search.
+        // Helper struct to gather all information needed to search. This also wraps
+        // the element in the grid.
         struct Node
         {
-            T value{ };
-            Grid2dCoordinate coordinate{ };
+            TElement value{ };
+            NavGrid2dCoordinate coordinate{ };
             Node* parent{ nullptr };
             std::unordered_set<Node*> adjacencyList{ };
-            size_t pathCost{ 0 };        // g
-            size_t heuristicCost{ 0 };    // h
+            TSize pathCost{ 0 };      // g
+            TSize heuristicCost{ 0 }; // h
 
-            size_t GetTotalCost() const { return pathCost + heuristicCost; }
+            TSize GetTotalCost() const { return pathCost + heuristicCost; }
         };
 
-        void InitializeNavGrid(const Grid2d<T>& inGrid);
+        using NavGrid2dElement = Node;
+
+        void InitializeNavGrid(const Grid2d<TElement, TSize>& inGrid);
         void BuildAdjacencyList(AdjacencyCriteria adjacencyCriteria);
         void ResetSearch();
-        void BuildHeuristicCosts(const Grid2dCoordinate& to);
+        void BuildHeuristicCosts(const NavGrid2dCoordinate& to);
 
         // Implements A* pathfinding. Different acceptance criteria can be provided to search for a particular candidate node.
         using AcceptanceCriteria = std::function<bool(Node*)>;
-        bool TryFindPathInternal(std::vector<Grid2dCoordinate>& outPath, const Grid2dCoordinate& from, AcceptanceCriteria acceptanceCriteria);
+        bool TryFindPathInternal(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, AcceptanceCriteria acceptanceCriteria);
 
     private:
-        Grid2d<Node> grid;
+        Grid2d<NavGrid2dElement, TSize> grid;
     };
 
-    template<typename T>
-    NavGrid2d<T>::AdjacencyCriteria NavGrid2d<T>::allNeighbors{ [](const T&, const T&) { return true; } };
+    template<typename TElement, SignedIntegral TSize>
+    NavGrid2d<TElement, TSize>::AdjacencyCriteria NavGrid2d<TElement, TSize>::allNeighbors{ [](const TElement&, const TElement&) { return true; } };
 
-    template<typename T>
-    bool NavGrid2d<T>::TryFindPath(std::vector<Grid2dCoordinate>& outPath, const Grid2dCoordinate& from, const Grid2dCoordinate& to)
+    template<typename TElement, SignedIntegral TSize>
+    bool NavGrid2d<TElement, TSize>::TryFindPath(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, const NavGrid2dCoordinate& to)
     {
         ResetSearch();
         BuildHeuristicCosts(to); // With a given target, heuristics can be built to decrease the number of visited nodes.
@@ -82,8 +88,8 @@ namespace Core::Math
             });
     }
 
-    template<typename T>
-    bool NavGrid2d<T>::TryFindPath(std::vector<Grid2dCoordinate>& outPath, const Grid2dCoordinate& from, const T& any)
+    template<typename TElement, SignedIntegral TSize>
+    bool NavGrid2d<TElement, TSize>::TryFindPath(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, const TElement& any)
     {
         ResetSearch();
         return TryFindPathInternal(outPath, from, [&any](Node* candidate)
@@ -92,8 +98,8 @@ namespace Core::Math
             });
     }
 
-    template<typename T>
-    bool NavGrid2d<T>::TryFindPathInternal(std::vector<Grid2dCoordinate>& outPath, const Grid2dCoordinate& from, AcceptanceCriteria acceptanceCriteria)
+    template<typename TElement, SignedIntegral TSize>
+    bool NavGrid2d<TElement, TSize>::TryFindPathInternal(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, AcceptanceCriteria acceptanceCriteria)
     {
         outPath.clear();
 
@@ -172,8 +178,8 @@ namespace Core::Math
         return outPath.size() > 0;
     }
 
-    template<typename T>
-    void NavGrid2d<T>::InitializeNavGrid(const Grid2d<T>& inGrid)
+    template<typename TElement, SignedIntegral TSize>
+    void NavGrid2d<TElement, TSize>::InitializeNavGrid(const Grid2d<TElement, TSize>& inGrid)
     {
         for (size_t y{ 0 }; y < inGrid.GetHeight(); ++y)
         {
@@ -187,8 +193,8 @@ namespace Core::Math
         }
     }
 
-    template<typename T>
-    void NavGrid2d<T>::BuildAdjacencyList(AdjacencyCriteria adjacencyCriteria)
+    template<typename TElement, SignedIntegral TSize>
+    void NavGrid2d<TElement, TSize>::BuildAdjacencyList(AdjacencyCriteria adjacencyCriteria)
     {
         // TODO: Build iterable version of Grid2d.
         for (size_t y{ 0 }; y < grid.GetHeight(); ++y)
@@ -219,8 +225,8 @@ namespace Core::Math
         }
     }
 
-    template<typename T>
-    void NavGrid2d<T>::BuildHeuristicCosts(const Grid2dCoordinate& to)
+    template<typename TElement, SignedIntegral TSize>
+    void NavGrid2d<TElement, TSize>::BuildHeuristicCosts(const NavGrid2dCoordinate& to)
     {
         for (auto& [coordinate, value] : grid)
         {
@@ -228,8 +234,8 @@ namespace Core::Math
         }
     }
 
-    template<typename T>
-    void NavGrid2d<T>::ResetSearch()
+    template<typename TElement, SignedIntegral TSize>
+    void NavGrid2d<TElement, TSize>::ResetSearch()
     {
         for (auto& [coordinate, value] : grid)
         {

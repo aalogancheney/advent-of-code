@@ -4,7 +4,7 @@
 
 namespace Core
 {
-    std::vector<std::string> CORE_API ReadAllLinesInFile(const std::filesystem::path& path);
+    CORE_API std::vector<std::string> ReadAllLinesInFile(const std::filesystem::path& path);
 
-    std::vector<std::string> CORE_API SplitString(const std::string& input, const std::string& delimiter);
+    CORE_API std::vector<std::string> SplitString(const std::string& input, const std::string& delimiter);
 }

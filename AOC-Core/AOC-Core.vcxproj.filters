@@ -4,6 +4,9 @@
     <Filter Include="Private">
       <UniqueIdentifier>{001F8D23-6CFE-0BBF-7516-9795E1747220}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Private\Math">
+      <UniqueIdentifier>{D9E316B7-C546-A65B-6ECC-DE115A0E72DE}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Public">
       <UniqueIdentifier>{8480F8CA-7022-23A1-59DD-36F5451EAAF1}</UniqueIdentifier>
     </Filter>
@@ -68,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="Source\Private\Input.cpp">
       <Filter>Private</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Private\Math\Grid2d.cpp">
+      <Filter>Private\Math</Filter>
     </ClCompile>
     <ClCompile Include="Source\Private\Puzzle.cpp">
       <Filter>Private</Filter>

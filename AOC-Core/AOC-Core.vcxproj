@@ -170,6 +170,7 @@ IF EXIST ..\bin\Distribution-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E 
   <ItemGroup>
     <ClCompile Include="Source\Private\Application.cpp" />
     <ClCompile Include="Source\Private\Input.cpp" />
+    <ClCompile Include="Source\Private\Math\Grid2d.cpp" />
     <ClCompile Include="Source\Private\Puzzle.cpp" />
     <ClCompile Include="Source\Private\ScopedTimer.cpp" />
     <ClCompile Include="Source\pch.cpp">

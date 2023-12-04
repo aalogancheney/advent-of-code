@@ -4,25 +4,48 @@
 
 namespace Puzzle03Helpers
 {
+    using Grid = Core::Math::Grid2d<char, int32>;
+
+    struct Symbol
+    {
+        char glyph{ };
+        std::vector<int32> neighboringNumbers{ };
+    };
+
     constexpr char period{ '.' };
     constexpr char gear{ '*' };
 
-    static std::vector<Vector2_32> adjacentCoordinates
+    static std::vector<Grid::Grid2dCoordinate> adjacentCoordinates
     {
-        Vector2_32{  0, -1 }, // Left
-        Vector2_32{ -1, -1 }, // Top-left
-        Vector2_32{ -1,  0 }, // Top
-        Vector2_32{ -1,  1 }, // Top-right
-        Vector2_32{  0,  1 }, // Right
-        Vector2_32{  1,  1 }, // Bottom-right
-        Vector2_32{  1,  0 }, // Bottom
-        Vector2_32{  1, -1 }, // Bottom-left
+        {  0, -1 }, // Left
+        { -1, -1 }, // Top-left
+        { -1,  0 }, // Top
+        { -1,  1 }, // Top-right
+        {  0,  1 }, // Right
+        {  1,  1 }, // Bottom-right
+        {  1,  0 }, // Bottom
+        {  1, -1 }, // Bottom-left
     };
 
     static auto IsGear(char c) { return c == gear; }
     static auto IsSymbol(char c) { return c != period && !std::isdigit(c); }
 
-    static auto IsCoordinateAdjacentToSymbol(const std::vector<std::string>& input, int32 x, int32 y)
+    static auto IsCoordinateAdjacentToSymbol(const Grid& grid, Grid::Grid2dCoordinate coordinate)
+    {
+        Core::Math::Range<int32> xBounds{ 0, grid.GetWidth() };
+        Core::Math::Range<int32> yBounds{ 0, grid.GetHeight() };
+
+        bool bIsNeighboringSymbol{ false };
+        for (const auto& adjacentCoordinate : adjacentCoordinates)
+        {
+            const auto neighbor{ coordinate + adjacentCoordinate };
+            const bool bIsInBounds{ xBounds.IsInRange(neighbor.x) && yBounds.IsInRange(neighbor.y) };
+            bIsNeighboringSymbol |= bIsInBounds && IsSymbol(grid.at(neighbor));
+        }
+        return bIsNeighboringSymbol;
+    }
+
+    /*static auto IsCoordinateAdjacentToSymbol(const std::vector<std::string>& input, int32 x, int32 y)
     {
         check(input.size() > 0);
         check(input[0].size() > 0);
@@ -36,7 +59,7 @@ namespace Puzzle03Helpers
             bIsNeighboringSymbol |= bIsInBounds && IsSymbol(input[neighbor.x][neighbor.y]);
         }
         return bIsNeighboringSymbol;
-    }
+    }*/
 
     static auto GetAdjacentGears(const std::vector<std::string>& input, int32 x, int32 y, std::unordered_set<Vector2_32>& adjacentGears)
     {
@@ -44,10 +67,9 @@ namespace Puzzle03Helpers
         check(input[0].size() > 0);
         static Core::Math::Range<int32> xBounds{ 0, static_cast<int32>(input.size() - 1) };
         static Core::Math::Range<int32> yBounds{ 0, static_cast<int32>(input[0].size() - 1) };
-        bool bIsNeighboringSymbol{ false };
         for (const auto& adjacentCoordinate : adjacentCoordinates)
         {
-            Vector2_32 neighbor{ x + adjacentCoordinate.x, y + adjacentCoordinate.y };
+            Vector2_32 neighbor{ x + static_cast<int32>(adjacentCoordinate.x), y + static_cast<int32>(adjacentCoordinate.y) };
             const bool bIsInBounds{ xBounds.IsInRange(neighbor.x) && yBounds.IsInRange(neighbor.y) };
             if (bIsInBounds && IsGear(input[neighbor.x][neighbor.y]))
             {
@@ -55,43 +77,80 @@ namespace Puzzle03Helpers
             }
         }
     }
+
+    auto GetAdjacentSymbolCoordinates(const Grid& grid, const Grid::Grid2dCoordinate& coordinate, std::unordered_set<Grid::Grid2dCoordinate>& adjacentSymbolCoordinates)
+    {
+        Core::Math::Range<int32> xBounds{ 0, grid.GetWidth() - 1 };
+        Core::Math::Range<int32> yBounds{ 0, grid.GetHeight() - 1 };
+
+        for (const auto& adjacentCoordinate : adjacentCoordinates)
+        {
+            const auto neighbor{ coordinate + adjacentCoordinate };
+            const bool bIsInBounds{ xBounds.IsInRange(neighbor.x) && yBounds.IsInRange(neighbor.y) };
+            if (bIsInBounds && IsSymbol(grid.at(neighbor)))
+            {
+                adjacentSymbolCoordinates.emplace(neighbor);
+            }
+        }
+    }
+
+    std::unordered_map<Grid::Grid2dCoordinate, Symbol> GetSymbols(const Grid& grid)
+    {
+        std::unordered_map<Grid::Grid2dCoordinate, Symbol> symbols{ };
+
+        // Run one pass to get all symbols and their coordinates.
+        for (const auto& [coordinate, value] : grid)
+        {
+            if (IsSymbol(value))
+            {
+                symbols.emplace(coordinate, Symbol{ .glyph{ value } });
+            }
+        }
+
+        // Run another pass to find all the numberes and add them to the neighboring symbols.
+        for (auto iter{ grid.rbegin() }; iter != grid.rend(); ++iter)
+        {
+            const auto& [coordinate, value] { *iter };
+            if (std::isdigit(value))
+            {
+                // Found start of digit.
+                // Create the number and check surrounding characters for symbols.
+                auto number{ 0 };
+                auto digit{ 1 };
+                std::unordered_set<Grid::Grid2dCoordinate> adjacentSymbolCoordinates{ };
+                while (true)
+                {
+                    const auto& [runnerCoordinate, runnerValue] { *iter };
+                    if (runnerCoordinate.x != coordinate.x || !std::isdigit(runnerValue)) { break; }
+
+                    number += digit * std::stoi(std::string{ runnerValue });
+                    digit *= 10;
+                    GetAdjacentSymbolCoordinates(grid, runnerCoordinate, adjacentSymbolCoordinates);
+                    ++iter;
+                }
+
+                for (const auto& adjacentSymbolCoordinate : adjacentSymbolCoordinates)
+                {
+                    symbols[adjacentSymbolCoordinate].neighboringNumbers.emplace_back(number);
+                }
+            }
+        }
+        return symbols;
+    }
 }
 
 void Puzzle03::SolveA(const std::vector<std::string>& input) const
 {
     using namespace Puzzle03Helpers;
 
+    auto grid{ Core::Math::ConstructGrid(input) };
+    auto symbols{ GetSymbols(grid) };
+
     auto sum{ 0 };
-
-    // Traverse each row top-to-bottom, and each column from right-to-left. This helps
-    // build numbers starting in the 1's, then 10's, etc.
-    for (int32 row{ 0 }; row < input.size(); ++row)
+    for (const auto& [coordinate, symbol] : symbols)
     {
-        for (int32 col{ static_cast<int32>(input[row].length() - 1) }; col >= 0; --col)
-        {
-            if (std::isdigit(input[row][col]))
-            {
-                // Found start of digit. Create the number and check surrounding characters for
-                // symbols (i.e. non-digit, non-period characters) to see if the resulting number
-                // should be counted for the result.
-                bool bIsNumberAdjacentToSymbol{ false };
-                int32 number{ 0 };
-                int32 digit{ 1 };
-                while (std::isdigit(input[row][col]))
-                {
-                    number += digit * std::stoi(std::string{ input[row][col] });
-                    digit *= 10;
-                    bIsNumberAdjacentToSymbol |= IsCoordinateAdjacentToSymbol(input, row, col--);
-                }
-
-                if (bIsNumberAdjacentToSymbol)
-                {
-                    sum += number;
-                }
-            }
-        }
+        //sum += std::ranges::accumulate()
     }
-
     std::cout << sum << std::endl;
 }
 
@@ -99,50 +158,16 @@ void Puzzle03::SolveB(const std::vector<std::string>& input) const
 {
     using namespace Puzzle03Helpers;
 
-    // Run one pass on grid to find all gears.
-    std::unordered_map<Vector2_32, std::vector<int32>> gears{ };
-    for (int32 row{ 0 }; row < input.size(); ++row)
-    {
-        for (int32 col{ static_cast<int32>(input[row].length() - 1) }; col >= 0; --col)
-        {
-            if (IsGear(input[row][col])) { gears[Vector2_32{ row, col }] = { }; }
-        }
-    }
+    auto grid{ Core::Math::ConstructGrid(input) };
+    auto symbols{ GetSymbols(grid) };
 
-    // Traverse each row top-to-bottom, and each column from right-to-left. This helps
-    // build numbers in-place.
-    for (int32 row{ 0 }; row < input.size(); ++row)
+    auto sum{ 0 };
+    for (const auto& [coordinate, symbol] : symbols)
     {
-        for (int32 col{ static_cast<int32>(input[row].length() - 1) }; col >= 0; --col)
+        if (!IsGear(symbol.glyph)) { continue; }
+        if (symbol.neighboringNumbers.size() == 2)
         {
-            if (std::isdigit(input[row][col]))
-            {
-                // Found start of digit. Create the number and add the resulting number to
-                // the set of all adjacent gears.
-                std::unordered_set<Vector2_32> neighboringGears{ };
-                int32 number{ 0 };
-                int32 digit{ 1 };
-                while (std::isdigit(input[row][col]))
-                {
-                    number += digit * std::stoi(std::string{ input[row][col] });
-                    digit *= 10;
-                    GetAdjacentGears(input, row, col--, neighboringGears);
-                }
-
-                for (const auto& gear : neighboringGears)
-                {
-                    gears[gear].emplace_back(number);
-                }
-            }
-        }
-    }
-
-    int64 sum{ 0 };
-    for (const auto& [coordinate, neighboringNumbers] : gears)
-    {
-        if (neighboringNumbers.size() == 2)
-        {
-            sum += static_cast<int64>(neighboringNumbers[0]) * static_cast<int64>(neighboringNumbers[1]);
+            sum += static_cast<int64>(symbol.neighboringNumbers[0]) * static_cast<int64>(symbol.neighboringNumbers[1]);
         }
     }
     std::cout << sum << std::endl;
