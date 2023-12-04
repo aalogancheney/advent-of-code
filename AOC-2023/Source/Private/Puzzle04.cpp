@@ -8,36 +8,17 @@ namespace Puzzle04Helpers
     {
         int32 score{ 0 };
         int32 matchingNumbers{ 0 };
-        std::unordered_set<int32> winningNumbers{ };
-        std::unordered_set<int32> numbersOnCard{ };
 
-        auto Init()
+        Card(int32 inScore, int32 inMatchingNumbers)
+            : score{ inScore }
+            , matchingNumbers{ inMatchingNumbers }
         {
-            // Pre-calculate score.
-            for (const auto& winningNumber : winningNumbers)
-            {
-                if (numbersOnCard.contains(winningNumber))
-                {
-                    if (score == 0) { score = 1; }
-                    else { score *= 2; }
-                }
-            }
 
-            // Pre-calculate number of winning numbers.
-            for (const auto& winningNumber : winningNumbers)
-            {
-                if (numbersOnCard.contains(winningNumber))
-                {
-                    ++matchingNumbers;
-                }
-            }
         }
     };
 
     auto CreateCard(const std::string& input)
     {
-        Card card{ };
-
         constexpr auto cardDelimiter{ ": " };
         const auto& splitCard{ Core::SplitString(input, cardDelimiter) };
         check(splitCard.size() == 2);
@@ -46,23 +27,44 @@ namespace Puzzle04Helpers
         const auto& splitNumbers{ Core::SplitString(splitCard[1], numbersDelimiter) };
         check(splitNumbers.size() == 2);
 
-        const auto& winningNumbers{ Core::SplitString(splitNumbers[0], " ") };
-        for (const auto& winningNumber : winningNumbers)
+        std::unordered_set<int32> winningNumbers{ };
+        const auto& winningNumberStrings{ Core::SplitString(splitNumbers[0], " ") };
+        for (const auto& winningNumber : winningNumberStrings)
         {
             if (winningNumber == "") { continue; }
-            card.winningNumbers.emplace(std::stoi(winningNumber));
+            winningNumbers.emplace(std::stoi(winningNumber));
         }
 
-        const auto& numbersOnCard{ Core::SplitString(splitNumbers[1], " ") };
-        for (const auto& numberOnCard : numbersOnCard)
+        std::unordered_set<int32> numbersOnCard{ };
+        const auto& numbersOnCardStrings{ Core::SplitString(splitNumbers[1], " ") };
+        for (const auto& numberOnCard : numbersOnCardStrings)
         {
             if (numberOnCard == "") { continue; }
-            card.numbersOnCard.emplace(std::stoi(numberOnCard));
+            numbersOnCard.emplace(std::stoi(numberOnCard));
         }
 
-        card.Init();
+        // Pre-calculate score.
+        int32 score{ 0 };
+        for (const auto& winningNumber : winningNumbers)
+        {
+            if (numbersOnCard.contains(winningNumber))
+            {
+                if (score == 0) { score = 1; }
+                else { score *= 2; }
+            }
+        }
 
-        return card;
+        // Pre-calculate number of winning numbers.
+        int32 matchingNumbers{ 0 };
+        for (const auto& winningNumber : winningNumbers)
+        {
+            if (numbersOnCard.contains(winningNumber))
+            {
+                ++matchingNumbers;
+            }
+        }
+
+        return Card{ score, matchingNumbers };
     }
 
     std::vector<Card> CreateCards(const std::vector<std::string>& input)
