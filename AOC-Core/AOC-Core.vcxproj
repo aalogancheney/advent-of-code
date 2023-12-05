@@ -156,6 +156,7 @@ IF EXIST ..\bin\Distribution-windows-x86_64\AOC-Core\AOC-Core.dll\ (xcopy /Q /E 
     <ClInclude Include="Source\Public\EntryPoint.h" />
     <ClInclude Include="Source\Public\Hashing.h" />
     <ClInclude Include="Source\Public\Input.h" />
+    <ClInclude Include="Source\Public\Math\Concepts.h" />
     <ClInclude Include="Source\Public\Math\Grid2d.h" />
     <ClInclude Include="Source\Public\Math\NavGrid2d.h" />
     <ClInclude Include="Source\Public\Math\Range.h" />
