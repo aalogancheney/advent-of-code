@@ -26,7 +26,7 @@ namespace Puzzle03Helpers
         for (const auto& adjacentCoordinate : Grid::Grid2dCoordinate::cartesianNeighboringDirectionsWithDiagonals)
         {
             const auto neighbor{ coordinate + adjacentCoordinate };
-            const bool bIsInBounds{ xBounds.IsInRange(neighbor.x) && yBounds.IsInRange(neighbor.y) };
+            const bool bIsInBounds{ xBounds.ContainsInclusive(neighbor.x) && yBounds.ContainsInclusive(neighbor.y) };
             if (bIsInBounds && IsSymbol(grid.at(neighbor)))
             {
                 adjacentSymbolCoordinates.emplace(neighbor);

@@ -4,23 +4,203 @@
 
 namespace Puzzle05Helpers
 {
-    struct RangeMapping
+    struct MappedRange : public Core::Math::Range<int64>
     {
+        MappedRange(int64 inLowerBound, int64 inUpperBound, int64 inOffset)
+            : Core::Math::Range<int64>{ inLowerBound, inUpperBound }
+            , offset{ inOffset }
+        {
+
+        }
+
+        int64 offset{ 0 };
+
+        bool IsInMappedRange(int64 value) { return ContainsInclusive(value); }
+        int64 Remap(int64 value) { check(IsInMappedRange(value)); return value + offset; }
+
+        void Print() const
+        {
+            std::cout << "(" << GetLowerBound() << "," << GetUpperBound() << ":" << offset << ")";
+        }
+
+        //// Comparisons only care about bounds. The offset is used for remapping the values within the bounds.
+        //auto operator<=>(const MappedRange& other) const { return Core::Math::Range<int64>::operator<=>(other); }
+        //bool operator==(const MappedRange& other) const { return Core::Math::Range<int64>::operator==(other); }
+    };
+
+    struct Covering
+    {
+        std::vector<MappedRange> mappedRanges{ MappedRange{ 0, std::numeric_limits<int64>::max(), 0 } };
+
+        void Print()
+        {
+            for (const auto& mappedRange : mappedRanges)
+            {
+                mappedRange.Print();
+            }
+        }
+
+        auto MapValue(int64 value) const
+        {
+            for (const auto& mappedRange : mappedRanges)
+            {
+                if (mappedRange.ContainsInclusive(value))
+                {
+                    return value + mappedRange.offset;
+                }
+            }
+
+            return 0LL;
+            checkNoEntry();
+        }
+
+        void InsertMappedRange(const MappedRange& newMappedRange)
+        {
+            std::cout << "Inserting:\n\t";
+            newMappedRange.Print();
+            std::cout << "\nInto:\n\t";
+            Print();
+
+            // Find the index where this should be inserted.
+            size_t index{ 0 };
+            while (index < mappedRanges.size() && mappedRanges[index].GetLowerBound() < newMappedRange.GetLowerBound())
+            {
+                ++index;
+            }
+
+            mappedRanges.emplace(mappedRanges.begin() + index, newMappedRange);
+
+            // Fix up things to the left.
+            if (index > 0)
+            {
+                auto& leftNeighbor{ mappedRanges[index - 1] };
+
+                // Handle case where range needs to be split up. This can only happen from the left,
+                // since insertion occurs in-order (so this isn't in the branch below).
+                if (leftNeighbor.ContainsExclusive(newMappedRange))
+                {
+                    std::cout << "\nSplitting range";
+                    mappedRanges[index].offset += leftNeighbor.offset;
+                    auto upperSplit{ MappedRange{ newMappedRange.GetUpperBound() + 1, leftNeighbor.GetUpperBound(), leftNeighbor.offset } };
+                    leftNeighbor.SetUpperBound(newMappedRange.GetLowerBound() - 1);
+                    mappedRanges.emplace(mappedRanges.begin() + index + 1, upperSplit);
+                }
+
+                // Erase values that are completely replaced by the new mapping.
+                while (index > 0 && newMappedRange.ContainsInclusive(mappedRanges[index - 1]))
+                {
+                    std::cout << "\nErasing to the left";
+                    mappedRanges.erase(mappedRanges.begin() + index - 1);
+                    --index;
+                }
+
+                if (index > 0 && newMappedRange.OverlapsUpper(mappedRanges[index - 1]))
+                {
+                    std::cout << "\nAdjusting bounds on the left";
+                    mappedRanges[index - 1].SetUpperBound(newMappedRange.GetLowerBound() - 1);
+                }
+            }
+
+            // Fix up things to the right.
+            if (index < mappedRanges.size() - 1)
+            {
+                auto& rightNeighbor{ mappedRanges[index + 1] };
+
+                // Erase values that are completely replaced by the new mapping.
+                while (index < mappedRanges.size() - 1 && newMappedRange.ContainsInclusive(mappedRanges[index + 1]))
+                {
+                    std::cout << "\nErasing to the right";
+                    mappedRanges.erase(mappedRanges.begin() + index + 1);
+                }
+
+                if (index < mappedRanges.size() - 1 && newMappedRange.OverlapsLower(mappedRanges[index + 1]))
+                {
+                    std::cout << "\nAdjusting bounds on the right";
+                    mappedRanges[index + 1].SetLowerBound(newMappedRange.GetUpperBound() + 1);
+                }
+            }
+
+            std::cout << "\nResult:\n\t";
+            Print();
+            std::cout << "\n\n";
+        }
+    };
+
+    struct Farm
+    {
+        std::vector<uint64> seeds{ };
+        Covering covering{ };
+
+        auto FindSmallestStartLocationA() const
+        {
+            int64 smallestValue{ std::numeric_limits<int64>::max() };
+            for (const auto& seed : seeds)
+            {
+                auto mappedValue{ covering.MapValue(seed) };
+                std::cout << "Mapped " << seed << " to " << mappedValue << "\n";
+                smallestValue = std::min(smallestValue, mappedValue);
+            }
+            return smallestValue;
+        }
+
+        auto FindSmallestStartLocationB() const
+        {
+
+        }
+    };
+
+    auto CreateFarm(const std::vector<std::string>& input)
+    {
+        Farm farm{ };
+        auto seeds{ Core::SplitString(Core::SplitString(input[0], "seeds: ")[1], " ") };
+        for (const auto& seed : seeds)
+        {
+            farm.seeds.emplace_back(std::stoull(seed));
+        }
+
+        for (auto index{ 1 }; index < input.size(); ++index)
+        {
+            if (input[index] == "")
+            {
+                std::cout << "Inserting new mapping\n===\n";
+                if (index > 12) { return farm; }
+                ++index;
+                continue;
+            }
+
+            auto rangeMappingValues{ Core::SplitString(input[index], " ") };
+            check(rangeMappingValues.size() == 3);
+            auto destinationRangeStart{ std::stoll(rangeMappingValues[0]) };
+            auto sourceRangeStart{ std::stoll(rangeMappingValues[1]) };
+            auto rangeLength{ std::stoll(rangeMappingValues[2]) };
+            farm.covering.InsertMappedRange(MappedRange{ sourceRangeStart, sourceRangeStart + rangeLength - 1, destinationRangeStart - sourceRangeStart });
+        }
+
+        return farm;
+    }
+
+    /*struct RangeMapping
+    {
+        Core::Math::Range<uint64> mappedRange;
         uint64 destinationRangeStart{ 0 };
-        uint64 sourceRangeStart{ 0 };
-        uint64 rangeLength{ 0 };
+
+        RangeMapping(uint64 inDestinationRangeStart, uint64 sourceRangeStart, uint64 rangeLength)
+            : mappedRange{ sourceRangeStart, sourceRangeStart + rangeLength - 1 }
+            , destinationRangeStart{ inDestinationRangeStart}
+        {
+
+        }
 
         bool IsRemapped(uint64 input) const
         {
-            Core::Math::Range<uint64> mappedRange{ sourceRangeStart, sourceRangeStart + rangeLength };
-            return mappedRange.IsInRange(input);
+            return mappedRange.ContainsInclusive(input);
         }
 
         uint64 Map(uint64 input) const
         {
-            if (!IsRemapped(input)) { return input; }
-            check(input >= sourceRangeStart);
-            return (input - sourceRangeStart) + destinationRangeStart;
+            check(IsRemapped(input));
+            check(input >= mappedRange.GetLowerBound());
+            return (input - mappedRange.GetLowerBound()) + destinationRangeStart;
         }
     };
 
@@ -104,21 +284,28 @@ namespace Puzzle05Helpers
             auto rangeMappingValues{ Core::SplitString(input[index], " ") };
             check(rangeMappingValues.size() == 3);
             farm.mappings.back().rangeMappings.emplace_back(RangeMapping{
-                .destinationRangeStart = std::stoull(rangeMappingValues[0]),
-                .sourceRangeStart = std::stoull(rangeMappingValues[1]),
-                .rangeLength = std::stoull(rangeMappingValues[2]),
+                std::stoull(rangeMappingValues[0]),
+                std::stoull(rangeMappingValues[1]),
+                std::stoull(rangeMappingValues[2]),
             });
         }
 
         return farm;
-    }
+    }*/
 }
 
 void Puzzle05::SolveA(const std::vector<std::string>& input) const
 {
     using namespace Puzzle05Helpers;
 
+    std::cout << "\n";
     auto farm{ CreateFarm(input) };
+    std::cout << "Final result:\n";
+    farm.covering.Print();
+    std::cout << "\n";
+
+    std::cout << farm.FindSmallestStartLocationA() << std::endl;
+
     //std::cout << farm.FindSmallestStartLocationA() << std::endl;
 }
 
@@ -126,6 +313,17 @@ void Puzzle05::SolveB(const std::vector<std::string>& input) const
 {
     using namespace Puzzle05Helpers;
 
-    auto farm{ CreateFarm(input) };
-    std::cout << farm.FindSmallestStartLocationB() << std::endl;
+    //auto farm{ CreateFarm(input) };
+    //std::cout << farm.FindSmallestStartLocationB() << std::endl;
+    /*for (uint64 index{ 0 }; index < 100; ++index)
+    {
+        uint64 value{ index };
+        std::cout << std::setw(3) << index;
+        for (const auto& mapping : farm.mappings)
+        {
+            value = mapping.Map(value);
+            std::cout << " >>> " << std::setw(3) << value;
+        }
+        std::cout << "\n";
+    }*/
 }
