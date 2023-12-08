@@ -3,6 +3,8 @@
 #include "Puzzles.h"
 #include "Core.h"
 
+#include <numeric>
+
 namespace Puzzle08Helpers
 {
     struct Node
@@ -75,26 +77,15 @@ namespace Puzzle08Helpers
         return steps;
     }
 
-    int64 GreatestCommonMultiple(int64 a, int64 b)
-    {
-        if (b == 0) { return a; }
-        return GreatestCommonMultiple(b, a % b);
-    }
-
-    int64 LeastCommonMultiple(int64 a, int64 b)
-    {
-        return (a * b) / GreatestCommonMultiple(a, b);
-    }
-
     int64 LeastCommonMultiple(const std::vector<int64>& values)
     {
         if (values.size() == 0) { return 0; }
         if (values.size() == 1) { return values[0]; }
-        if (values.size() == 2) { return LeastCommonMultiple(values[0], values[1]); }
-        int64 lcm{ LeastCommonMultiple(values[0], values[1]) };
+        if (values.size() == 2) { return std::lcm(values[0], values[1]); }
+        int64 lcm{ std::lcm(values[0], values[1]) };
         for (size_t index{ 2 }; index < values.size(); ++index)
         {
-            lcm = LeastCommonMultiple(lcm, values[index]);
+            lcm = std::lcm(lcm, values[index]);
         }
         return lcm;
     }
