@@ -73,50 +73,56 @@ namespace Puzzle05Helpers
             // Fix up things to the left.
             if (index > 0)
             {
-                auto& leftNeighbor{ mappedRanges[index - 1] };
+                auto leftIndex{ index };
+                auto& leftNeighbor{ mappedRanges[leftIndex - 1] };
 
                 // Handle case where range needs to be split up. This can only happen from the left,
                 // since insertion occurs in-order (so this isn't in the branch below).
                 if (leftNeighbor.ContainsExclusive(newMappedRange))
                 {
                     std::cout << "\nSplitting range";
-                    mappedRanges[index].offset += leftNeighbor.offset;
+                    mappedRanges[leftIndex].offset += leftNeighbor.offset;
                     auto upperSplit{ MappedRange{ newMappedRange.GetUpperBound() + 1, leftNeighbor.GetUpperBound(), leftNeighbor.offset } };
                     leftNeighbor.SetUpperBound(newMappedRange.GetLowerBound() - 1);
-                    mappedRanges.emplace(mappedRanges.begin() + index + 1, upperSplit);
+                    mappedRanges.emplace(mappedRanges.begin() + leftIndex + 1, upperSplit);
+                    return;
                 }
 
                 // Erase values that are completely replaced by the new mapping.
-                while (index > 0 && newMappedRange.ContainsInclusive(mappedRanges[index - 1]))
+                while (leftIndex > 0 && newMappedRange.ContainsInclusive(mappedRanges[leftIndex - 1]))
                 {
                     std::cout << "\nErasing to the left";
-                    mappedRanges.erase(mappedRanges.begin() + index - 1);
-                    --index;
+                    mappedRanges[leftIndex - 1].offset += newMappedRange.offset;
+                    //mappedRanges.erase(mappedRanges.begin() + leftIndex - 1);
+                    --leftIndex;
                 }
 
-                if (index > 0 && newMappedRange.OverlapsUpper(mappedRanges[index - 1]))
+                if (leftIndex > 0 && newMappedRange.OverlapsUpper(mappedRanges[leftIndex - 1]))
                 {
                     std::cout << "\nAdjusting bounds on the left";
-                    mappedRanges[index - 1].SetUpperBound(newMappedRange.GetLowerBound() - 1);
+                    mappedRanges[leftIndex - 1].SetUpperBound(newMappedRange.GetLowerBound() - 1);
                 }
             }
 
             // Fix up things to the right.
             if (index < mappedRanges.size() - 1)
             {
-                auto& rightNeighbor{ mappedRanges[index + 1] };
+                auto rightIndex{ index };
+                auto& rightNeighbor{ mappedRanges[rightIndex + 1] };
 
                 // Erase values that are completely replaced by the new mapping.
-                while (index < mappedRanges.size() - 1 && newMappedRange.ContainsInclusive(mappedRanges[index + 1]))
+                while (rightIndex < mappedRanges.size() - 1 && newMappedRange.ContainsInclusive(mappedRanges[rightIndex + 1]))
                 {
                     std::cout << "\nErasing to the right";
-                    mappedRanges.erase(mappedRanges.begin() + index + 1);
+                    mappedRanges[rightIndex + 1].offset += newMappedRange.offset;
+                    ++rightIndex;
+                    //mappedRanges.erase(mappedRanges.begin() + rightIndex + 1);
                 }
 
-                if (index < mappedRanges.size() - 1 && newMappedRange.OverlapsLower(mappedRanges[index + 1]))
+                if (rightIndex < mappedRanges.size() - 1 && newMappedRange.OverlapsLower(mappedRanges[rightIndex + 1]))
                 {
                     std::cout << "\nAdjusting bounds on the right";
-                    mappedRanges[index + 1].SetLowerBound(newMappedRange.GetUpperBound() + 1);
+                    mappedRanges[rightIndex + 1].SetLowerBound(newMappedRange.GetUpperBound() + 1);
                 }
             }
 
