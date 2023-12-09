@@ -27,13 +27,12 @@ namespace Puzzle09Helpers
     private:
         int64 ReduceAndEvaluate(const std::vector<int64>& input, std::function<int64(const std::vector<int64>&, int64)> eval) const
         {
-            // Capture whether or not a non-zero value was added to track whether or not reduction should
-            // occur recursively in a single pass.
+            // Determine whether or not reduction should continue in a single pass.
             bool bContinueReduction{ false };
             auto reduce{ [&bContinueReduction](int64 rhs, int64 lhs)
                 {
                     int64 difference{ rhs - lhs };
-                    bContinueReduction |= difference != 0;
+                    bContinueReduction |= (difference != 0);
                     return difference;
                 }};
 
