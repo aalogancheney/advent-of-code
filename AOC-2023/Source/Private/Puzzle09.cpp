@@ -8,7 +8,7 @@ namespace Puzzle09Helpers
     {
         std::vector<int64> values{ };
         
-        int64 GetNextValue() const
+        auto GetNextValue() const
         {
             auto next{ [](const std::vector<int64>& input, int64 value) {
                 return input.back() + value;
@@ -16,7 +16,7 @@ namespace Puzzle09Helpers
             return next(values, ReduceAndEvaluate(values, next));
         }
 
-        int64 GetPreviousValue() const
+        auto GetPreviousValue() const
         {
             auto previous{ [](const std::vector<int64>& input, int64 value) {
                 return input.front() - value;
@@ -39,7 +39,7 @@ namespace Puzzle09Helpers
             std::vector<int64> difference{ input };
             std::adjacent_difference(input.begin(), input.end(), difference.begin(), reduce);
             difference.erase(difference.begin()); // The front element is always the same as the input.
-            return bContinueReduction ? eval(difference, ReduceAndEvaluate(difference, eval)) : 0;
+            return bContinueReduction ? eval(difference, ReduceAndEvaluate(difference, eval)) : 0LL;
         }
     };
 
@@ -47,13 +47,13 @@ namespace Puzzle09Helpers
     {
         std::vector<Sequence> sequences{ };
 
-        int64 GetSumOfNextValues()
+        auto GetSumOfNextValues()
         {
             auto sumOfNextValues{ [](int64 value, Sequence sequence) { return sequence.GetNextValue() + value; } };
             return std::accumulate(sequences.begin(), sequences.end(), 0LL, sumOfNextValues);;
         }
 
-        int64 GetSumOfPreviousValues()
+        auto GetSumOfPreviousValues()
         {
             auto sumOfPreviousValues{ [](int64 value, Sequence sequence) { return sequence.GetPreviousValue() + value; } };
             return std::accumulate(sequences.begin(), sequences.end(), 0LL, sumOfPreviousValues);
