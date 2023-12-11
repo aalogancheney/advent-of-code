@@ -30,8 +30,8 @@ namespace Core::Math
         template<SignedArithmetic U>
         using NeighboringDirectionCollection = std::unordered_set<Vector2<U>>;
 
-        static const NeighboringDirectionCollection<T> cartesianNeighboringDirections;
-        static const NeighboringDirectionCollection<T> cartesianNeighboringDirectionsWithDiagonals;
+        static const NeighboringDirectionCollection<T> cardinalNeighboringDirections;
+        static const NeighboringDirectionCollection<T> cardinalNeighboringDirectionsWithDiagonals;
 
         bool operator==(const Vector2<T>&) const = default;
         auto operator<=>(const Vector2<T>&) const = default;
@@ -74,7 +74,7 @@ namespace Core::Math
     template<SignedArithmetic T> const Vector2<T> Vector2<T>::leftDown  { -1, -1 };
 
     template<SignedArithmetic T>
-    const Vector2<T>::NeighboringDirectionCollection<T> Vector2<T>::cartesianNeighboringDirections
+    const Vector2<T>::NeighboringDirectionCollection<T> Vector2<T>::cardinalNeighboringDirections
     {
         // Static initialization ordering means the named variables can't be used here.
         {  0,  1 },
@@ -84,7 +84,7 @@ namespace Core::Math
     };
 
     template<SignedArithmetic T>
-    const Vector2<T>::NeighboringDirectionCollection<T> Vector2<T>::cartesianNeighboringDirectionsWithDiagonals
+    const Vector2<T>::NeighboringDirectionCollection<T> Vector2<T>::cardinalNeighboringDirectionsWithDiagonals
     {
         // Static initialization ordering means the named variables can't be used here.
         {  0,  1 },

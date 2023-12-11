@@ -12,7 +12,7 @@ namespace Core::Math
         for (auto& [coordinate, value] : grid)
         {
             // Grid iterator traverses in row-major order. Grab input in the correct order.
-            grid.at(coordinate) = input[coordinate.y][coordinate.x];
+            grid.at(coordinate).second = input[coordinate.y][coordinate.x];
         }
         return grid;
     }

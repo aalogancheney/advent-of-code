@@ -17,21 +17,68 @@ namespace Core::Math
     class NavGrid2d
     {
     public:
+        struct Node
+        {
+            TElement value{ };
+
+            const std::unordered_set<typename Grid2d<Node, TSize>::Grid2dElement*> GetNeighbors() const { return adjacencyList; }
+
+        private:
+            // Allow NavGrid2d access to private pathfinding variables.
+            friend class NavGrid2d;
+
+            // Pathfinding member variables.
+            Grid2d<Node, TSize>::Grid2dElement* parent{ nullptr };
+            std::unordered_set<typename Grid2d<Node, TSize>::Grid2dElement*> adjacencyList{ };
+            TSize pathCost{ 0 };      // g
+            TSize heuristicCost{ 0 }; // h
+            TSize GetTotalCost() const { return pathCost + heuristicCost; }
+        };
+        
+        using NavGrid2dElement = Grid2d<Node, TSize>::Grid2dElement;
+        using NavGrid2dCoordinate = Grid2d<Node, TSize>::Grid2dCoordinate;
+
+        using AssignGridValues = std::function<void(NavGrid2dElement&)>;
+
         // Additional criteria can be applied when building the adjacency list for each node. The first argument is the current
-        // node's value; the second argument is the neighboring node's value.
-        using AdjacencyCriteria = std::function<bool(const TElement&, const TElement&)>;
+        // node; the second argument is the neighboring node.
+        using AdjacencyCriteria = std::function<bool(const NavGrid2dElement&, const NavGrid2dElement&)>;
 
         // Default adjacency criteria that does no filtering. This is probably undesired for most use-cases, since a complete
-        // adjacency set will degenerate into moving diagonally/horizontally until the target is reached, since there are no barriers.
+        // adjacency set will degenerate into moving diagonally/horizontally until the target is reached.
         static AdjacencyCriteria allNeighbors;
 
-        using NavGrid2dCoordinate = Vector2<TSize>;
-
-        NavGrid2d(TSize inWidth, TSize inHeight, AdjacencyCriteria adjacencyCriteria)
+        NavGrid2d(TSize inWidth, TSize inHeight, AssignGridValues assignGridValues, AdjacencyCriteria adjacencyCriteria)
             : grid{ inWidth, inHeight }
         {
-            //InitializeNavGrid(inGrid);
+            for (auto& element : *this)
+            {
+                assignGridValues(element);
+            }
             BuildAdjacencyList(adjacencyCriteria);
+        }
+
+        auto begin() noexcept { return grid.begin(); }
+        auto end() noexcept { return grid.end(); }
+        auto begin() const noexcept { return grid.begin(); }
+        auto end() const noexcept { return grid.end(); }
+        auto cbegin() const noexcept { return grid.cbegin(); }
+        auto cend() const noexcept { return grid.cend(); }
+        auto rbegin() noexcept { return grid.rbegin(); }
+        auto rend() noexcept { return grid.rend(); }
+        auto rbegin() const noexcept { return grid.rbegin(); }
+        auto rend() const noexcept { return grid.rend(); }
+        auto crbegin() const noexcept { return grid.crbegin(); }
+        auto crend() const noexcept { return grid.crend(); }
+
+        constexpr const NavGrid2dElement& at(NavGrid2dCoordinate coordinate) const
+        {
+            return grid.at(coordinate);
+        }
+
+        constexpr NavGrid2dElement& at(NavGrid2dCoordinate coordinate)
+        {
+            return grid.at(coordinate);
         }
 
         // Tries to find a path connecting "from" and "to" positions on the grid. Returns true if a path was found, and
@@ -45,33 +92,15 @@ namespace Core::Math
         bool TryFindPath(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, const TElement& any);
 
     private:
-        // Helper struct to gather all information needed to search. This also wraps
-        // the element in the grid.
-        struct Node
-        {
-            TElement value{ };
-            NavGrid2dCoordinate coordinate{ };
-            Node* parent{ nullptr };
-            std::unordered_set<Node*> adjacencyList{ };
-            TSize pathCost{ 0 };      // g
-            TSize heuristicCost{ 0 }; // h
+        Grid2d<Node, TSize> grid;
 
-            TSize GetTotalCost() const { return pathCost + heuristicCost; }
-        };
-
-        using NavGrid2dElement = Node;
-
-        void InitializeNavGrid(const Grid2d<TElement, TSize>& inGrid);
         void BuildAdjacencyList(AdjacencyCriteria adjacencyCriteria);
         void ResetSearch();
         void BuildHeuristicCosts(const NavGrid2dCoordinate& to);
 
         // Implements A* pathfinding. Different acceptance criteria can be provided to search for a particular candidate node.
-        using AcceptanceCriteria = std::function<bool(Node*)>;
+        using AcceptanceCriteria = std::function<bool(const NavGrid2dElement*)>;
         bool TryFindPathInternal(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, AcceptanceCriteria acceptanceCriteria);
-
-    private:
-        Grid2d<NavGrid2dElement, TSize> grid;
     };
 
     template<typename TElement, SignedIntegral TSize>
@@ -82,20 +111,20 @@ namespace Core::Math
     {
         ResetSearch();
         BuildHeuristicCosts(to); // With a given target, heuristics can be built to decrease the number of visited nodes.
-        return TryFindPathInternal(outPath, from, [&to](Node* candidate)
-            {
-                return candidate->coordinate == to;
-            });
+        return TryFindPathInternal(outPath, from, [&to](const NavGrid2dElement* candidate) {
+            const auto& [coordinate, node] { *candidate };
+            return coordinate == to;
+        });
     }
 
     template<typename TElement, SignedIntegral TSize>
     bool NavGrid2d<TElement, TSize>::TryFindPath(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, const TElement& any)
     {
         ResetSearch();
-        return TryFindPathInternal(outPath, from, [&any](Node* candidate)
-            {
-                return candidate->value == any;
-            });
+        return TryFindPathInternal(outPath, from, [&any](const NavGrid2dElement* candidate) {
+            const auto& [coordinate, node] { *candidate };
+            return node.value == any;
+        });
     }
 
     template<typename TElement, SignedIntegral TSize>
@@ -103,44 +132,48 @@ namespace Core::Math
     {
         outPath.clear();
 
-        Node* currentNode{ &grid.at(from.x, from.y) };
+        NavGrid2dElement* currentElement{ &grid.at(from) };
 
-        std::unordered_set<Node*> closedSet{ };
-        closedSet.emplace(currentNode);
+        std::unordered_set<NavGrid2dElement*> closedSet{ };
+        closedSet.emplace(currentElement);
 
         // The openSet should ideally be a priority queue to automatically sort candidate nodes
         // based on their total cost. However, the std::priority_queue implementation does not
         // support a .contains() method. The candidates in the openSet should be small enough
         // that this won't have a major impact.
-        std::unordered_set<Node*> openSet{ };
+        std::unordered_set<NavGrid2dElement*> openSet{ };
 
         // Continue searching until the acceptance criteria is met.
-        while (!acceptanceCriteria(currentNode))
+        while (!acceptanceCriteria(currentElement))
         {
+            auto& [currentCoordinate, currentNode] { *currentElement };
+
             // Check each neighbor.
-            for (Node* candidate : currentNode->adjacencyList)
+            for (NavGrid2dElement* neighbor : currentNode.adjacencyList)
             {
                 // If it has been fully explored (i.e. in the closedSet), ignore and move on.
-                if (closedSet.contains(candidate)) { continue; }
+                if (closedSet.contains(neighbor)) { continue; }
+
+                auto& [neighborCoordinate, neighborNode] { *neighbor };
 
                 // If it has been visited, but not fully explored (i.e. in the openSet), check if
                 // parental adoption should take place. This occurs when the current path cost is
                 // cheaper than the previously-calculated version (i.e. we found a better path from
                 // the starting position to the candidate node).
-                if (openSet.contains(candidate))
+                if (openSet.contains(neighbor))
                 {
-                    size_t newPathCost{ currentNode->pathCost + 1 };
-                    if (newPathCost < candidate->pathCost)
+                    auto newPathCost{ currentNode.pathCost + 1 };
+                    if (newPathCost < neighborNode.pathCost)
                     {
-                        candidate->parent = currentNode;
-                        candidate->pathCost = newPathCost;
+                        neighborNode.parent = currentElement;
+                        neighborNode.pathCost = newPathCost;
                     }
                 }
                 else
                 {
-                    candidate->parent = currentNode;
-                    candidate->pathCost = currentNode->pathCost + 1;
-                    openSet.emplace(candidate);
+                    neighborNode.parent = currentElement;
+                    neighborNode.pathCost = currentNode.pathCost + 1;
+                    openSet.emplace(neighbor);
                 }
             }
 
@@ -149,77 +182,55 @@ namespace Core::Math
 
             // Find the next-best candidate based on the total cost of reaching that node.
             auto iter{ openSet.begin() };
-            Node* nextNode{ *iter };
+            NavGrid2dElement* nextElement{ *iter };
             while (iter != openSet.end())
             {
-                if ((*iter)->GetTotalCost() < nextNode->GetTotalCost())
+                const auto& [coordinate, node] { **iter };
+                if (node.GetTotalCost() < nextElement->second.GetTotalCost())
                 {
-                    nextNode = *iter;
+                    nextElement = *iter;
                 }
                 ++iter;
             }
 
             // Update pointers and visited nodes.
-            currentNode = nextNode;
-            openSet.erase(currentNode);
-            closedSet.emplace(currentNode);
+            currentElement = nextElement;
+            openSet.erase(nextElement);
+            closedSet.emplace(nextElement);
         }
 
         // If the acceptance criteria is met and the node has a parent (meaning the path can be reconstructed),
         // generate that path.
-        if (acceptanceCriteria(currentNode) && currentNode->parent != nullptr)
+        if (acceptanceCriteria(currentElement) && currentElement->second.parent != nullptr)
         {
-            while (currentNode != nullptr)
+            while (currentElement != nullptr)
             {
-                outPath.emplace_back(currentNode->coordinate);
-                currentNode = currentNode->parent;
+                outPath.emplace_back(currentElement->first);
+                currentElement = currentElement->second.parent;
             }
         }
         return outPath.size() > 0;
     }
 
     template<typename TElement, SignedIntegral TSize>
-    void NavGrid2d<TElement, TSize>::InitializeNavGrid(const Grid2d<TElement, TSize>& inGrid)
-    {
-        for (size_t y{ 0 }; y < inGrid.GetHeight(); ++y)
-        {
-            for (size_t x{ 0 }; x < inGrid.GetWidth(); ++x)
-            {
-                Node& node{ grid.at(x, y) };
-                node.value = inGrid.at(x, y);
-                node.coordinate.x = x;
-                node.coordinate.y = y;
-            }
-        }
-    }
-
-    template<typename TElement, SignedIntegral TSize>
     void NavGrid2d<TElement, TSize>::BuildAdjacencyList(AdjacencyCriteria adjacencyCriteria)
     {
-        // TODO: Build iterable version of Grid2d.
-        for (size_t y{ 0 }; y < grid.GetHeight(); ++y)
+        for (auto& element : *this)
         {
-            for (size_t x{ 0 }; x < grid.GetWidth(); ++x)
+            auto& [coordinate, node] { element };
+            std::vector<NavGrid2dElement*> cartesianNeighbors;
+            for (const auto& cartesianNeighboringDirection : NavGrid2dCoordinate::cardinalNeighboringDirections)
             {
-                Node& node{ grid.at(x, y) };
-                
-                // Consider neighbors in the cardinal directions.
-                // TODO: Offer option to consider diagonal neighbors?
-                std::vector<Node*> neighbors{ };
-                if (node.coordinate.x > 0)                        { neighbors.emplace_back(&grid.at(node.coordinate.x - 1, node.coordinate.y)); }
-                if (node.coordinate.x < grid.GetWidth() - 1)    { neighbors.emplace_back(&grid.at(node.coordinate.x + 1, node.coordinate.y)); }
-                if (node.coordinate.y > 0)                        { neighbors.emplace_back(&grid.at(node.coordinate.x, node.coordinate.y - 1)); }
-                if (node.coordinate.y < grid.GetHeight() - 1)    { neighbors.emplace_back(&grid.at(node.coordinate.x, node.coordinate.y + 1)); }
-
-                // For each neighbor, apply the AdjacencyCriteria to see if we ACTUALLY want it to be considered as a neighbor.
-                // This is a more strict filter that can be used to determine whether or not a neighbor is worth visiting according
-                // to user-defined criteria.
-                for (Node* neighbor : neighbors)
+                if (grid.IsInBounds(coordinate + cartesianNeighboringDirection))
                 {
-                    if (adjacencyCriteria(node.value, neighbor->value))
-                    {
-                        node.adjacencyList.emplace(neighbor);
-                    }
+                    cartesianNeighbors.emplace_back(&grid.at(coordinate + cartesianNeighboringDirection));
+                }
+            }
+            for (NavGrid2dElement* cartesianNeighbor : cartesianNeighbors)
+            {
+                if (adjacencyCriteria(element, *cartesianNeighbor))
+                {
+                    node.adjacencyList.emplace(cartesianNeighbor);
                 }
             }
         }
@@ -228,19 +239,19 @@ namespace Core::Math
     template<typename TElement, SignedIntegral TSize>
     void NavGrid2d<TElement, TSize>::BuildHeuristicCosts(const NavGrid2dCoordinate& to)
     {
-        for (auto& [coordinate, value] : grid)
+        for (auto& [coordinate, node] : *this)
         {
-            value.heuristicCost = (coordinate.x > to.x ? coordinate.x - to.x : to.x - coordinate.x) + (coordinate.y > to.y ? coordinate.y - to.y : to.y - coordinate.y) - 1;
+            node.heuristicCost = std::abs(coordinate.x - to.x) + std::abs(coordinate.y - to.y) - 1;
         }
     }
 
     template<typename TElement, SignedIntegral TSize>
     void NavGrid2d<TElement, TSize>::ResetSearch()
     {
-        for (auto& [coordinate, value] : grid)
+        for (auto& [coordinate, node] : *this)
         {
-            value.pathCost = value.heuristicCost = 0;
-            value.parent = nullptr;
+            node.pathCost = node.heuristicCost = 0;
+            node.parent = nullptr;
         }
     }
 }

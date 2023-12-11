@@ -23,11 +23,11 @@ namespace Puzzle03Helpers
         Core::Math::Range<int32> xBounds{ 0, grid.GetWidth() - 1 };
         Core::Math::Range<int32> yBounds{ 0, grid.GetHeight() - 1 };
 
-        for (const auto& adjacentCoordinate : Grid::Grid2dCoordinate::cartesianNeighboringDirectionsWithDiagonals)
+        for (const auto& adjacentCoordinate : Grid::Grid2dCoordinate::cardinalNeighboringDirectionsWithDiagonals)
         {
             const auto neighbor{ coordinate + adjacentCoordinate };
             const bool bIsInBounds{ xBounds.ContainsInclusive(neighbor.x) && yBounds.ContainsInclusive(neighbor.y) };
-            if (bIsInBounds && IsSymbol(grid.at(neighbor)))
+            if (bIsInBounds && IsSymbol(grid.at(neighbor).second))
             {
                 adjacentSymbolCoordinates.emplace(neighbor);
             }

@@ -7,17 +7,17 @@
 
 namespace Core::Math
 {
-    template<typename TElement, SignedIntegral TCoordinate>
+    template<typename TElement, SignedIntegral TSize>
     class Grid2d
     {
     public:
-        using Grid2dCoordinate = Vector2<TCoordinate>;
-        using Grid2dElement = std::tuple<Grid2dCoordinate, TElement>;
+        using Grid2dCoordinate = Vector2<TSize>;
+        using Grid2dElement = std::pair<Grid2dCoordinate, TElement>;
         
-        Grid2d(TCoordinate inWidth, TCoordinate inHeight)
+        Grid2d(TSize inWidth, TSize inHeight)
             : width{ inWidth }
             , height{ inHeight }
-            , elements(width * height)
+            , elements(static_cast<size_t>(width * height))
         {
             for (auto index{ 0 }; index < elements.size(); ++index)
             {
@@ -42,7 +42,7 @@ namespace Core::Math
         auto GetHeight() const noexcept { return height; }
         auto size() const noexcept { return elements.size(); }
 
-        auto IndexToCoordinate(TCoordinate index) const
+        auto IndexToCoordinate(TSize index) const
         {
             check(index < size());
             return Grid2dCoordinate{ index % width, index / width };
@@ -55,24 +55,30 @@ namespace Core::Math
             return coordinate.x + coordinate.y * height;
         }
 
-        constexpr const TElement& at(TCoordinate x, TCoordinate y) const
+        auto IsInBounds(Grid2dCoordinate coordinate) const
         {
-            return std::get<1>(elements.at(CoordinateToIndex({ x, y })));
+            return coordinate.x >= 0 && coordinate.x < GetWidth()
+                && coordinate.y >= 0 && coordinate.y < GetHeight();
         }
 
-        constexpr TElement& at(TCoordinate x, TCoordinate y)
+        constexpr const Grid2dElement& at(TSize x, TSize y) const
         {
-            return std::get<1>(elements.at(CoordinateToIndex({ x, y })));
+            return elements.at(CoordinateToIndex({ x, y }));
         }
 
-        constexpr const TElement& at(Grid2dCoordinate coordinate) const
+        constexpr Grid2dElement& at(TSize x, TSize y)
         {
-            return std::get<1>(elements.at(CoordinateToIndex(coordinate)));
+            return elements.at(CoordinateToIndex({ x, y }));
         }
 
-        constexpr TElement& at(Grid2dCoordinate coordinate)
+        constexpr const Grid2dElement& at(Grid2dCoordinate coordinate) const
         {
-            return std::get<1>(elements.at(CoordinateToIndex(coordinate)));
+            return elements.at(CoordinateToIndex(coordinate));
+        }
+
+        constexpr Grid2dElement& at(Grid2dCoordinate coordinate)
+        {
+            return elements.at(CoordinateToIndex(coordinate));
         }
 
         auto Print() const
@@ -88,8 +94,8 @@ namespace Core::Math
         }
 
     private:
-        TCoordinate width{ 0 };
-        TCoordinate height{ 0 };
+        TSize width{ 0 };
+        TSize height{ 0 };
         std::vector<Grid2dElement> elements{ };
     };
 
