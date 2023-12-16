@@ -91,6 +91,18 @@ namespace Core::Math
         // (including the start and end points). Returns false if no path could be found.
         bool TryFindPath(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, const TElement& any);
 
+        void Print()
+        {
+            for (const auto& [coordinate, value] : grid)
+            {
+                if (coordinate.x == 0)
+                {
+                    std::cout << "\n";
+                }
+                std::cout << value.value;
+            }
+        }
+
     private:
         Grid2d<Node, TSize> grid;
 
@@ -104,7 +116,7 @@ namespace Core::Math
     };
 
     template<typename TElement, SignedIntegral TSize>
-    NavGrid2d<TElement, TSize>::AdjacencyCriteria NavGrid2d<TElement, TSize>::allNeighbors{ [](const TElement&, const TElement&) { return true; } };
+    NavGrid2d<TElement, TSize>::AdjacencyCriteria NavGrid2d<TElement, TSize>::allNeighbors{ [](const NavGrid2dElement&, const NavGrid2dElement&) { return true; } };
 
     template<typename TElement, SignedIntegral TSize>
     bool NavGrid2d<TElement, TSize>::TryFindPath(std::vector<NavGrid2dCoordinate>& outPath, const NavGrid2dCoordinate& from, const NavGrid2dCoordinate& to)

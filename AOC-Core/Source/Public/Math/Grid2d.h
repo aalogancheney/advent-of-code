@@ -17,7 +17,7 @@ namespace Core::Math
         Grid2d(TSize inWidth, TSize inHeight)
             : width{ inWidth }
             , height{ inHeight }
-            , elements(static_cast<size_t>(width * height))
+            , elements(static_cast<size_t>(width) * static_cast<size_t>(height))
         {
             for (auto index{ 0 }; index < elements.size(); ++index)
             {
@@ -52,7 +52,7 @@ namespace Core::Math
         {
             check(coordinate.x < width);
             check(coordinate.y < height);
-            return coordinate.x + coordinate.y * height;
+            return coordinate.x + coordinate.y * width;
         }
 
         auto IsInBounds(Grid2dCoordinate coordinate) const
